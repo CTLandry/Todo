@@ -16,6 +16,9 @@
     <PackageReference Include="Prism.Core" Version="7.2.0.1422" />
     <PackageReference Include="Prism.Forms" Version="7.2.0.1422" />
     <PackageReference Include="Prism.Unity.Forms" Version="7.2.0.1422" />
+    <PackageReference Include="Microsoft.AppCenter" Version="3.4.1" />
+    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="3.4.1" />
+    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="3.4.1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ViewModels\" />
@@ -23,7 +26,7 @@
     <Folder Include="Services\" />
     <Folder Include="Views\" />
     <Folder Include="Infrastructure\" />
-    <Folder Include="Infrastructure\Navigation\" />
     <Folder Include="Infrastructure\IoC\" />
+    <Folder Include="Infrastructure\Exceptions\" />
   </ItemGroup>
 </Project>

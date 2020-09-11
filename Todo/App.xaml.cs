@@ -1,13 +1,9 @@
-﻿using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using Prism;
+﻿using Prism;
 using Prism.Ioc;
-using Prism.Navigation;
 using Prism.Unity;
-using Unity;
+using Todo.Infrastructure.IoC;
 using Todo.Views;
-using Todo.ViewModels;
+
 
 namespace Todo
 {
@@ -25,17 +21,15 @@ namespace Todo
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            //Navigation Views
-            containerRegistry.RegisterForNavigation<NavigationPage>();
-            containerRegistry.RegisterForNavigation<TodoListView, TodoListViewModel>();
+            try
+            {
+                IoCServices.RegisterServices(containerRegistry);
+                IoCNavigation.RegisterViewsAndViewModels(containerRegistry);
+            }
+            catch (System.Exception ex)
+            {
 
-            //Services
-            //var config = ConfigLoader.LoadConfiguration();
-            //containerRegistry.RegisterInstance<IConfiguration>(config);
-            //containerRegistry.RegisterSingleton<I, Logger>();
-            //containerRegistry.RegisterSingleton<ICache, CachingService>();
-            //containerRegistry.RegisterSingleton<ISession, Session>();
-            //containerRegistry.RegisterSingleton<ISocialAuth, SocialAuthenticationService>();
+            }
         }
     }
 }
