@@ -32,7 +32,7 @@ namespace Todo
             //Services
             //var config = ConfigLoader.LoadConfiguration();
             //containerRegistry.RegisterInstance<IConfiguration>(config);
-            //containerRegistry.RegisterSingleton<ILogger, Logger>();
+            //containerRegistry.RegisterSingleton<I, Logger>();
             //containerRegistry.RegisterSingleton<ICache, CachingService>();
             //containerRegistry.RegisterSingleton<ISession, Session>();
             //containerRegistry.RegisterSingleton<ISocialAuth, SocialAuthenticationService>();
