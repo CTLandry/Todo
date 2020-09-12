@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+
+<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!--  Color Pallet  -->
+    <Color x:Key="Brownie">#673E37</Color>
+    <Color x:Key="Mocha">#A79086</Color>
+    <Color x:Key="MintFrost">#A2d2C9</Color>
+    <Color x:Key="Cherry">#6D031C</Color>
+
+
+    <!--  Theme Colors  -->
+    <Color x:Key="BackgroundColor_Dark">#673E37</Color>
+    <Color x:Key="TextColor_Dark">#A2d2C9</Color>
+    <Color x:Key="AccentColor">#6D031C</Color>
+    <Color x:Key="BackgroundColor_Light">#A2d2C9</Color>
+    <Color x:Key="TextColor_Light">#673E37</Color>
+    <Color x:Key="ButtonColor_Dark">#6D031C</Color>
+    <Color x:Key="ButtonTextColor_Dark">#A2d2C9</Color>
+    <Color x:Key="ButtonColor_Light">#6D031C</Color>
+    <Color x:Key="ButtonTextColor_Light">#A2d2C9</Color>
+
+
+    <!--  Text Sizes  -->
+    <x:Double x:Key="TextSizeHeader">20</x:Double>
+    <x:Double x:Key="TextSizeHeader1">18</x:Double>
+    <x:Double x:Key="TextSizeBody">14</x:Double>
+    <x:Double x:Key="TextSizeBody1">12</x:Double>
+
+    <x:Double x:Key="ButtonTextSize">16</x:Double>
+
+    <!--  Page Styles  -->
+    <Style x:Key="backgroundStyle" TargetType="VisualElement">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource BackgroundColor_Dark}, Light={StaticResource BackgroundColor_Light}}" />
+    </Style>
+
+    <Style ApplyToDerivedTypes="True" TargetType="ContentPage">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource BackgroundColor_Dark}, Light={StaticResource BackgroundColor_Light}}" />
+    </Style>
+
+    <!--  Label Styles  -->
+    <Style x:Key="TextHeader" TargetType="Label">
+        <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource TextColor_Dark}, Light={StaticResource TextColor_Light}}" />
+        <Setter Property="FontSize" Value="{StaticResource TextSizeHeader}" />
+    </Style>
+
+    <Style x:Key="TextHeader1" TargetType="Label">
+        <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource TextColor_Dark}, Light={StaticResource TextColor_Light}}" />
+        <Setter Property="FontSize" Value="{StaticResource TextSizeHeader1}" />
+    </Style>
+
+    <Style x:Key="TextBody" TargetType="Label">
+        <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource TextColor_Dark}, Light={StaticResource TextColor_Light}}" />
+        <Setter Property="FontSize" Value="{StaticResource TextSizeBody}" />
+    </Style>
+
+    <Style x:Key="TextBody1" TargetType="Label">
+        <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource TextColor_Dark}, Light={StaticResource TextColor_Light}}" />
+        <Setter Property="FontSize" Value="{StaticResource TextSizeBody1}" />
+    </Style>
+
+    <!--  Button Styles  -->
+    <Style x:Key="DefaultButton" TargetType="Label">
+        <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource ButtonTextColor_Dark}, Light={StaticResource ButtonTextColor_Light}}" />
+        <Setter Property="FontSize" Value="{StaticResource ButtonTextSize}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource ButtonColor_Dark}, Light={StaticResource ButtonColor_Light}}" />
+    </Style>
+
+</ResourceDictionary>

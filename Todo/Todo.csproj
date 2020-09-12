@@ -32,5 +32,14 @@
     <Folder Include="Infrastructure\" />
     <Folder Include="Infrastructure\IoC\" />
     <Folder Include="Infrastructure\Exceptions\" />
+    <Folder Include="Styles\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Styles\Theme.xaml.cs">
+      <DependentUpon>Theme.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Styles\DefaultTheme.xaml.cs">
+      <DependentUpon>DefaultTheme.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>
