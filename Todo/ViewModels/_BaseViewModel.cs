@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Prism.Services;
-using Todo.Infrastructure.Globals;
+
 
 namespace Todo.ViewModels
 {

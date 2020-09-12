@@ -1,5 +1,5 @@
 ﻿using System;
-using Todo.Infrastructure.Globals;
+
 
 namespace Todo.ViewModels
 {
