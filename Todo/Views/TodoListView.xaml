@@ -7,6 +7,27 @@
     Title="Todo List"
     prism:ViewModelLocator.AutowireViewModel="True">
 
-    <Label Text="Todo List PlaceHolder" TextColor="Black" />
+    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <Label
+            HorizontalOptions="Center"
+            Style="{StaticResource TextHeader}"
+            Text="Header"
+            VerticalOptions="Center" />
+        <Label
+            HorizontalOptions="Center"
+            Style="{StaticResource TextHeader1}"
+            Text="Header1"
+            VerticalOptions="Center" />
+        <Label
+            HorizontalOptions="Center"
+            Style="{StaticResource TextBody}"
+            Text="Header1"
+            VerticalOptions="Center" />
+        <Button
+            HorizontalOptions="Center"
+            Style="{StaticResource DefaultButton}"
+            Text="Button"
+            VerticalOptions="Center" />
+    </StackLayout>
 
 </ContentPage>

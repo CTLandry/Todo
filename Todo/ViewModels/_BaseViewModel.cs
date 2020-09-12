@@ -1,14 +1,37 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Prism.Services;
+using Todo.Infrastructure.Globals;
 
 namespace Todo.ViewModels
 {
     /// <summary>
     /// Base view model implements INotifyPropertyChanged on the mutator of all ViewModel Properties
     /// </summary>
-    public class _BaseViewModel : INotifyPropertyChanged
+    public abstract class _BaseViewModel : INotifyPropertyChanged
     {
+        
+
+        bool isBusy = false;
+        public bool IsBusy
+        {
+            get { return isBusy; }
+            set { SetProperty(ref isBusy, value); }
+        }
+
+        string title = string.Empty;
+        public string Title
+        {
+            get { return title; }
+            set { SetProperty(ref title, value); }
+        }
+       
+        public _BaseViewModel()
+        {
+           
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)

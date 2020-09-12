@@ -33,6 +33,8 @@
     <Folder Include="Infrastructure\IoC\" />
     <Folder Include="Infrastructure\Exceptions\" />
     <Folder Include="Styles\" />
+    <Folder Include="Infrastructure\Domain\" />
+    <Folder Include="Infrastructure\Globals\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Styles\Theme.xaml.cs">
