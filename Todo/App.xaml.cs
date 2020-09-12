@@ -12,7 +12,7 @@ namespace Todo
     {
         public App() : this(null) { }
 
-        public App(IPlatformInitializer initializer) : base(initializer) { }
+        public App(IPlatformInitializer initializer) : base(initializer, setFormsDependencyResolver: true) { }
 
         protected override async void OnInitialized()
         {
