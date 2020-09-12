@@ -11,7 +11,7 @@ namespace Todo.Infrastructure.IoC
         /// <summary>
         /// Handling the registration of views to view models and other navigation items
         /// </summary>
-        /// <param name="containerRegistry">Prims IoC registery</param>
+        /// <param name="containerRegistry">Prism IoC registery</param>
         public static void RegisterViewsAndViewModels(IContainerRegistry containerRegistry)
         {
             try
@@ -21,7 +21,7 @@ namespace Todo.Infrastructure.IoC
             }
             catch (Exception ex)
             {
-
+                Exceptions.ErrorTracker.ReportError(ex);
             }
            
         }

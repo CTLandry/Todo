@@ -3,6 +3,7 @@ using Prism.Ioc;
 using Prism.Unity;
 using Todo.Infrastructure.IoC;
 using Todo.Views;
+using Todo.Infrastructure.Exceptions;
 
 
 namespace Todo
@@ -28,7 +29,7 @@ namespace Todo
             }
             catch (System.Exception ex)
             {
-
+                ErrorTracker.ReportError(ex);
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Prism.Ioc;
+using Todo.Infrastructure.Exceptions;
 using Todo.Services;
 
 namespace Todo.Infrastructure.IoC
@@ -8,9 +9,17 @@ namespace Todo.Infrastructure.IoC
     {
         public static void RegisterServices(IContainerRegistry containerRegistry)
         {
-            //containerRegistry.RegisterInstance<IConfiguration>(config);
-            containerRegistry.RegisterSingleton<ITodoService, TodoService>();
-            //containerRegistry.RegisterSingleton<ICache, CachingService>();
+            try
+            {
+                //containerRegistry.RegisterInstance<IConfiguration>(config);
+                containerRegistry.RegisterSingleton<ITodoService, TodoService>();
+                //containerRegistry.RegisterSingleton<ICache, CachingService>();
+            }
+            catch (Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+            }
+            
         }
     }
 }

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using Foundation;
+﻿using Foundation;
 using Prism;
 using Prism.Ioc;
 using UIKit;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 
 namespace Todo.iOS
 {
@@ -26,6 +25,9 @@ namespace Todo.iOS
         {
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new Todo.App(new iOSPlatformInitializer()));
+
+            AppCenter.Start("de806ee5-e5af-4b9d-8a0b-a19c9b6235d9",
+                   typeof(Analytics), typeof(Crashes));
 
             return base.FinishedLaunching(app, options);
         }
