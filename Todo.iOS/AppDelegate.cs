@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using Foundation;
+﻿using Foundation;
+using Prism;
+using Prism.Ioc;
 using UIKit;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 
 namespace Todo.iOS
 {
@@ -22,10 +23,21 @@ namespace Todo.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            AppCenter.Start("de806ee5-e5af-4b9d-8a0b-a19c9b6235d9",
+                  typeof(Analytics), typeof(Crashes));
+
             global::Xamarin.Forms.Forms.Init();
-            LoadApplication(new App());
+            LoadApplication(new Todo.App(new iOSPlatformInitializer()));
 
             return base.FinishedLaunching(app, options);
+        }
+    }
+
+    public class iOSPlatformInitializer : IPlatformInitializer
+    {
+        public void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+
         }
     }
 }

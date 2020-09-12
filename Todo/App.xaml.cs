@@ -1,28 +1,36 @@
-﻿using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using Prism;
+using Prism.Ioc;
+using Prism.Unity;
+using Todo.Infrastructure.IoC;
+using Todo.Views;
+using Todo.Infrastructure.Exceptions;
+
 
 namespace Todo
 {
-    public partial class App : Application
+    public partial class App : PrismApplication
     {
-        public App()
+        public App() : this(null) { }
+
+        public App(IPlatformInitializer initializer) : base(initializer) { }
+
+        protected override async void OnInitialized()
         {
             InitializeComponent();
-
-            MainPage = new MainPage();
+            App.Current.MainPage = new TodoListView();
         }
 
-        protected override void OnStart()
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-        }
-
-        protected override void OnSleep()
-        {
-        }
-
-        protected override void OnResume()
-        {
+            try
+            {
+                IoCServices.RegisterServices(containerRegistry);
+                IoCNavigation.RegisterViewsAndViewModels(containerRegistry);
+            }
+            catch (System.Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+            }
         }
     }
 }
