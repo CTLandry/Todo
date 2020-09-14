@@ -39,9 +39,11 @@ namespace Todo.ViewModels
         {
             this.cachingService = cacheService;
 
-            var todoList = new TodoListModel("Test List");
-            var result = Task.Run(async () => await cachingService.CacheObject(todoList, 365));
-           
+            TodoItemModel a = new TodoItemModel("A");
+            Task.Run(async () => await cacheService.CacheObject<TodoItemModel>(a, 365));
+            TodoItemModel b;
+            Task.Run(async () => await cacheService.GetObject<TodoItemModel>(a.Id.ToString()));
+
         }
 
         #endregion
@@ -54,7 +56,10 @@ namespace Todo.ViewModels
 
         #region PrivateMethods
 
+        private async Task SaveTodoList(TodoListModel todoList)
+        {
 
+        }
 
         #endregion
 

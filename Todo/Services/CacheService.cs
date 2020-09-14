@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MonkeyCache;
 using MonkeyCache.FileStore;
+using Newtonsoft.Json;
 using Todo.Infrastructure.Exceptions;
 using Todo.Models;
+using System.Linq;
 
 namespace Todo.Services
 {
@@ -21,13 +24,13 @@ namespace Todo.Services
             Barrel.ApplicationId = BarrelId;
         }
 
-        public async Task<bool> CacheObject<T>(T model, int days) where T : _BaseModel
+        public async Task<bool> CacheObject<T>(string serviceName, T model, int days) where T : _BaseModel
         {
             try
             {
                 return await Task.Run(() =>
                 { 
-                    Barrel.Current.Add(model.Id.ToString(), model, TimeSpan.FromDays(days));
+                    Barrel.Current.Add(key: serviceName, model, TimeSpan.FromDays(days));
 
                     return true;
                 });
@@ -39,23 +42,63 @@ namespace Todo.Services
             }
         }
 
-        public async Task<T> GetObject<T>(string key)
+        public async Task<T> GetObject<T>(string serviceName, Guid modelId) where T : _BaseModel
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await Task.Run(() =>
+                {
+                    var results = Barrel.Current.Get<List<T>>(key: serviceName);
+                    var result = results.Where(x => x.Id == modelId).FirstOrDefault();
+
+                    return result;
+                });
+
+            }
+            catch (Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+                return null;
+            }
         }
 
-        public async Task<T> GetAllObjects<T>()
+        public async Task<List<T>> GetAllObjects<T>(string serviceName)
         {
-            throw new NotImplementedException();
+            List<T> collection = new List<T>();
+
+            try
+            {
+                return await Task.Run(() =>
+                {
+                    return Barrel.Current.Get<List<T>>(key: serviceName);
+                });
+
+            }
+            catch (Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+                return null;
+            }
         }
 
         public async Task EmptyCache()
         {
-            throw new NotImplementedException();
+            try
+            {
+                await Task.Run(() =>
+                {
+                    Barrel.Current.EmptyAll();
+                });
+
+            }
+            catch (Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+            }
         }
 
-   
 
-       
+
+
     }
 }
