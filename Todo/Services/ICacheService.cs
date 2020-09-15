@@ -7,10 +7,12 @@ namespace Todo.Services
 {
     public interface ICacheService
     {
-        Task<bool> CacheObject<T>(T data)where T : IModel;
-        Task<List<T>> GetAllObjects<T>(Guid ID) where T : IModel;
-        Task EmptyCache();
-       
-
+        
+        Task<List<TodoListModel>> GetAllLists();
+        Task<TodoListModel> GetList(Guid listId);
+        Task<bool> SaveList(TodoListModel list);
+        Task<bool> DeleteTodoItem(TodoItemModel todoItem);
+        Task<bool> SaveTodoItem(TodoItemModel todoItem, Guid listId);
+        Task<TodoItemModel> GetTodoItem(Guid todoId);
     }
 }

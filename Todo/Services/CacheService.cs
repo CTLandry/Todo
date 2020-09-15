@@ -2,75 +2,41 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Todo.Infrastructure.Exceptions;
+using SQLite;
+using System.IO;
 using Todo.Models;
-using System.Linq;
 
 namespace Todo.Services
 {
-    /// <summary>
-    /// Implementation of Monkey Cache
-    /// <see href="https://github.com/jamesmontemagno/monkey-cache"/>
-    /// </summary>
+
     public class CacheService : ICacheService
     {
-
-        private const string BarrelId = "com.vts.todobarrel";
+       
+        private readonly SQLiteAsyncConnection database;
 
         public CacheService()
         {
-            Barrel.ApplicationId = BarrelId;
-        }
-
-        public async Task<bool> CacheObject<T>(string serviceName, T model, int days)
-        {
             try
             {
-                return await Task.Run(() =>
-                { 
-                    Barrel.Current.Add(key: serviceName, model, TimeSpan.FromDays(days));
+                if (database == null)
+                {
+                    database = new SQLiteAsyncConnection(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Todo.db3"));
+                    database.CreateTableAsync<TodoListModel>().Wait();
+                    database.CreateTableAsync<TodoItemModel>().Wait();
 
-                    return true;
-                });
+                }
             }
             catch (Exception ex)
             {
                 ErrorTracker.ReportError(ex);
-                return false;
             }
         }
 
-        //public async Task<T> GetObject<T>(string serviceName, Guid modelId)
-        //{
-        //    try
-        //    {
-        //        return await Task.Run(() =>
-        //        {
-        //            var results = Barrel.Current.Get<List<T>>(key: serviceName);
-        //            var result = results.Where(x => x.Id == modelId).FirstOrDefault();
-
-        //            return result;
-        //        });
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ErrorTracker.ReportError(ex);
-        //        return null;
-        //    }
-        //}
-
-        public async Task<List<T>> GetAllObjects<T>(string serviceName)
+        public async Task<List<TodoListModel>> GetAllLists()
         {
-            List<T> collection = new List<T>();
-
             try
             {
-                return await Task.Run(() =>
-                {
-                    var result =  Barrel.Current.Get<List<T>>(key: serviceName);
-                    return result;
-                });
-
+                return await database.QueryAsync<TodoListModel>("SELECT * FROM TodoList ORDER BY Active desc");
             }
             catch (Exception ex)
             {
@@ -79,23 +45,103 @@ namespace Todo.Services
             }
         }
 
-        public async Task EmptyCache()
+        public async Task<TodoListModel> GetList(Guid listId)
         {
             try
             {
-                await Task.Run(() =>
-                {
-                    Barrel.Current.EmptyAll();
-                });
-
+                var list = await database.QueryAsync<TodoListModel>("SELECT * FROM TodoList WHERE Id = ?", listId);
+                return list[0] ?? null;
             }
             catch (Exception ex)
             {
                 ErrorTracker.ReportError(ex);
+                return null;
             }
         }
 
+        public async Task<bool> SaveList(TodoListModel list)
+        {
+            try
+            {
+                var existingList = await GetList(list.Id);
 
+                if(existingList != null)
+                {
+                    await database.UpdateAsync(list);
+                    
+                }
+                else
+                {
+                    await database.InsertAsync(list);
+                }
+
+
+                foreach(TodoItemModel item in list.TodoItems)
+                {
+                    await SaveTodoItem(item, list.Id);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteTodoItem(TodoItemModel todoItem)
+        {
+            try
+            {
+                await database.DeleteAsync(todoItem);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+                return false;
+            }
+        }
+
+        public async Task<bool> SaveTodoItem(TodoItemModel todoItem, Guid listId)
+        {
+            var existingItem = await GetTodoItem(todoItem.Id);
+
+            try
+            {
+                if (existingItem != null)
+                {
+                    await database.UpdateAsync(todoItem);
+
+                }
+                else
+                {
+                    todoItem.ListId = listId;
+                    await database.InsertAsync(todoItem);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+                return false;
+            }
+        }
+
+        public async Task<TodoItemModel> GetTodoItem(Guid todoId)
+        {
+            try
+            {
+                var item = await database.QueryAsync<TodoItemModel>("SELECT * FROM TodoItem WHERE Id = ?", todoId);
+                return item[0] ?? null;
+            }
+            catch (Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+                return null;
+            }
+        }
 
 
     }

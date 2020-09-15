@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using SQLite;
 
 namespace Todo.Models
 {
-   
+    [Table("TodoList")]
     public class TodoListModel : _BaseModel
     {
-        
+
         #region Properties
+
+        [PrimaryKey]
+        public Guid Id { get; set; }
 
         private string name;
         public string Name
@@ -17,6 +21,7 @@ namespace Todo.Models
         }
 
         private ObservableCollection<TodoItemModel> todoItems;
+        [SQLite.Ignore]
         public ObservableCollection<TodoItemModel> TodoItems
         {
             set { SetProperty(ref todoItems, value); }
@@ -34,9 +39,16 @@ namespace Todo.Models
 
         #region Constructors
 
+        public TodoListModel()
+        {
+           
+        }
+
         public TodoListModel(string name)
         {
+            Id = Guid.NewGuid();
             Name = name;
+            TodoItems = new ObservableCollection<TodoItemModel>();
         }
 
         #endregion

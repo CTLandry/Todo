@@ -8,16 +8,9 @@ namespace Todo.Models
     /// <summary>
     /// Base model implements INotifyPropertyChanged on the mutator of Model Properties
     /// </summary>
-    public abstract class _BaseModel : INotifyPropertyChanged, IModel
+    public abstract class _BaseModel : INotifyPropertyChanged
     {
-        public _BaseModel()
-        {
-            Id = Guid.NewGuid();
-        }
-
-        [PrimaryKey]
-        public Guid Id { get; }
-
+       
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)

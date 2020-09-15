@@ -1,10 +1,19 @@
 ﻿using System;
+using SQLite;
+
 namespace Todo.Models
 {
+    [Table("TodoItem")]
     public class TodoItemModel : _BaseModel
     {
-       
+
         #region Properties
+
+        [PrimaryKey]
+        public Guid Id { get; set; }
+
+        [NotNull]
+        public Guid ListId { get; set; }
 
         private string name;
         public string Name
@@ -31,15 +40,23 @@ namespace Todo.Models
 
         #region Constructors
 
+        public TodoItemModel()
+        {
+           
+        }
         public TodoItemModel(string name)
         {
+            Id = Guid.NewGuid();
             Name = name;
+            
         }
 
         public TodoItemModel(string name, string description)
         {
+            Id = Guid.NewGuid();
             Name = name;
             Description = description;
+            
         }
 
         #endregion

@@ -40,17 +40,21 @@ namespace Todo.ViewModels
         {
             this.cachingService = cacheService;
 
+            TodoListModel list1 = new TodoListModel("List1");
+
             TodoItemModel a = new TodoItemModel("A");
+            TodoItemModel b = new TodoItemModel("B");
             TodoItemModel c = new TodoItemModel("C");
-            Task.Run(async () => await cacheService.CacheObject("models", a, 365));
 
-            TodoItemModel b;
-            //Task.Run(async () => b = await cacheService.GetObject<TodoItemModel>("models", a.Id));
-            Task.Run(async () => await cacheService.CacheObject("models", c, 365));
+            list1.TodoItems.Add(a);
+            list1.TodoItems.Add(b);
 
-            List<TodoItemModel> all;
-            Task.Run(async () => all = await cacheService.GetAllObjects<TodoItemModel>("models"));
+            cacheService.SaveList(list1);
 
+            List<TodoListModel> list2 = null;
+            Task.Run(async () => list2 = await cacheService.GetAllLists());
+
+            Debug.WriteLine("Test");
         }
 
         #endregion
