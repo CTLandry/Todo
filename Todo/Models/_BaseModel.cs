@@ -1,19 +1,21 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using SQLite;
 
 namespace Todo.Models
 {
     /// <summary>
     /// Base model implements INotifyPropertyChanged on the mutator of Model Properties
     /// </summary>
-    public abstract class _BaseModel : INotifyPropertyChanged
+    public abstract class _BaseModel : INotifyPropertyChanged, IModel
     {
         public _BaseModel()
         {
             Id = Guid.NewGuid();
         }
 
+        [PrimaryKey]
         public Guid Id { get; }
 
         public event PropertyChangedEventHandler PropertyChanged;

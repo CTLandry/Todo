@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -40,9 +41,15 @@ namespace Todo.ViewModels
             this.cachingService = cacheService;
 
             TodoItemModel a = new TodoItemModel("A");
-            Task.Run(async () => await cacheService.CacheObject<TodoItemModel>(a, 365));
+            TodoItemModel c = new TodoItemModel("C");
+            Task.Run(async () => await cacheService.CacheObject("models", a, 365));
+
             TodoItemModel b;
-            Task.Run(async () => await cacheService.GetObject<TodoItemModel>(a.Id.ToString()));
+            //Task.Run(async () => b = await cacheService.GetObject<TodoItemModel>("models", a.Id));
+            Task.Run(async () => await cacheService.CacheObject("models", c, 365));
+
+            List<TodoItemModel> all;
+            Task.Run(async () => all = await cacheService.GetAllObjects<TodoItemModel>("models"));
 
         }
 
