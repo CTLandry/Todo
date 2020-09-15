@@ -2,9 +2,15 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Rg.Plugins.Popup.Services;
+using Todo.Infrastructure.Exceptions;
 using Todo.Models;
 using Todo.Services;
+using Todo.Views;
+using Xamarin.Forms;
 
 namespace Todo.ViewModels
 {
@@ -23,14 +29,28 @@ namespace Todo.ViewModels
 
         #region Services
 
-        ICacheService cachingService;
+        public readonly ICacheService cachingService;
 
         #endregion
 
         #region Commands
 
+        private ICommand showCreateTodoList;
+        public ICommand ShowCreateTodoListCommand
+        {
+            get
+            {
+                return showCreateTodoList ??
+                new Command(async (list) =>
+                {
+                    IsBusy = true;
+                    await PopupNavigation.Instance.PushAsync(new CreateListView(this, new TodoListModel(true)));
+                    IsBusy = false;
+                });
+            }
+        }
 
-
+       
 
         #endregion
 
@@ -38,40 +58,26 @@ namespace Todo.ViewModels
 
         public TodoListViewModel(ICacheService cacheService)
         {
-            this.cachingService = cacheService;
-
-            TodoListModel list1 = new TodoListModel("List1");
-
-            TodoItemModel a = new TodoItemModel("A");
-            TodoItemModel b = new TodoItemModel("B");
-            TodoItemModel c = new TodoItemModel("C");
-
-            list1.TodoItems.Add(a);
-            list1.TodoItems.Add(b);
-
-            cacheService.SaveList(list1);
-
-            List<TodoListModel> list2 = null;
-            Task.Run(async () => list2 = await cacheService.GetAllLists());
-
-            Debug.WriteLine("Test");
+            
+            try
+            {
+                this.cachingService = cacheService;
+            }
+            catch (Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+            }
         }
 
         #endregion
 
         #region PublicMethods
 
-
-
         #endregion
 
         #region PrivateMethods
 
-        private async Task SaveTodoList(TodoListModel todoList)
-        {
-
-        }
-
+       
         #endregion
 
     }

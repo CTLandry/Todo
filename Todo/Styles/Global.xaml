@@ -20,6 +20,8 @@
     <Color x:Key="ButtonTextColor_Dark">#A2d2C9</Color>
     <Color x:Key="ButtonColor_Light">#6D031C</Color>
     <Color x:Key="ButtonTextColor_Light">#A2d2C9</Color>
+    <Color x:Key="PopupBackground_Dark">#A2d2C9</Color>
+    <Color x:Key="PopupBackground_Light">#A79086</Color>
 
 
     <!--  Text Sizes  -->
@@ -38,6 +40,11 @@
     <Style ApplyToDerivedTypes="True" TargetType="ContentPage">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource BackgroundColor_Dark}, Light={StaticResource BackgroundColor_Light}}" />
     </Style>
+
+    <!--  Popup Styles  -->
+    <!--<Style ApplyToDerivedTypes="True" TargetType="PopupPage">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource PopupBackground_Dark}, Light={StaticResource PopupBackground_Light}}" />
+    </Style>-->
 
     <!--  Label Styles  -->
     <Style x:Key="TextHeader" TargetType="Label">

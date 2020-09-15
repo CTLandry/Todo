@@ -7,27 +7,78 @@
     Title="Todo List"
     prism:ViewModelLocator.AutowireViewModel="True">
 
-    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-        <Label
-            HorizontalOptions="Center"
-            Style="{StaticResource TextHeader}"
-            Text="Header"
-            VerticalOptions="Center" />
-        <Label
-            HorizontalOptions="Center"
-            Style="{StaticResource TextHeader1}"
-            Text="Header1"
-            VerticalOptions="Center" />
-        <Label
-            HorizontalOptions="Center"
-            Style="{StaticResource TextBody}"
-            Text="Header1"
-            VerticalOptions="Center" />
-        <Button
-            HorizontalOptions="Center"
-            Style="{StaticResource DefaultButton}"
-            Text="Button"
-            VerticalOptions="Center" />
-    </StackLayout>
+    <!--  PageContainer  -->
+    <Grid
+        x:Name="ContainerGrid"
+        HorizontalOptions="FillAndExpand"
+        VerticalOptions="FillAndExpand">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--  EmptyList  -->
+        <Grid
+            x:Name="EmptyListGrid"
+            Grid.Row="0"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Label
+                Grid.Row="0"
+                Style="{StaticResource TextHeader}"
+                Text="You Have No Active Lists" />
+            <Label
+                Grid.Row="1"
+                Style="{StaticResource TextHeader1}"
+                Text="Begin by adding one with the add button below" />
+            <Button
+                Grid.Row="2"
+                HorizontalOptions="CenterAndExpand"
+                Style="{StaticResource DefaultButton}"
+                Text="Add List"
+                VerticalOptions="CenterAndExpand" />
+            <Grid.Triggers>
+                <DataTrigger
+                    Binding="{Binding Source={x:Reference TodoListsCollectionView}, Path=ItemsSource.Count}"
+                    TargetType="CollectionView"
+                    Value="0">
+                    <Setter Property="IsVisible" Value="True" />
+                </DataTrigger>
+            </Grid.Triggers>
+        </Grid>
+
+        <!--  TodoListGrid  -->
+        <Grid
+            x:Name="TodoListGrid"
+            Grid.Row="0"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <CollectionView x:Name="TodoListsCollectionView" ItemsSource="{Binding TodoLists}" />
+            <Button
+                Grid.Row="2"
+                HorizontalOptions="CenterAndExpand"
+                Style="{StaticResource DefaultButton}"
+                Text="Add List"
+                VerticalOptions="CenterAndExpand" />
+            <Grid.Triggers>
+                <DataTrigger
+                    Binding="{Binding Source={x:Reference TodoListsCollectionView}, Path=ItemsSource.Count}"
+                    TargetType="CollectionView"
+                    Value="0">
+                    <Setter Property="IsVisible" Value="False" />
+                </DataTrigger>
+            </Grid.Triggers>
+        </Grid>
+
+
+    </Grid>
 
 </ContentPage>
