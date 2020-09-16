@@ -12,9 +12,7 @@ namespace Todo.Infrastructure.IoC
         {
             try
             {
-                
-                containerRegistry.RegisterSingleton<ITodoService, TodoService>();
-                //containerRegistry.RegisterSingleton<ICache, CachingService>();
+                containerRegistry.RegisterSingleton<ICacheService, CacheService>();
             }
             catch (Exception ex)
             {

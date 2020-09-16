@@ -5,6 +5,7 @@ using UIKit;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Xamarin.Forms;
 
 namespace Todo.iOS
 {
@@ -25,6 +26,10 @@ namespace Todo.iOS
         {
             AppCenter.Start("de806ee5-e5af-4b9d-8a0b-a19c9b6235d9",
                   typeof(Analytics), typeof(Crashes));
+
+            Rg.Plugins.Popup.Popup.Init();
+
+            Forms.SetFlags("SwipeView_Experimental");
 
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new Todo.App(new iOSPlatformInitializer()));

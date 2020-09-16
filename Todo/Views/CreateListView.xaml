@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<controls:Popup
+    x:Class="Todo.Views.CreateListView"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:Todo.Controls">
+    <controls:Popup.Content>
+        <Frame
+            Margin="24"
+            Padding="10"
+            BackgroundColor="{StaticResource PopupBackground}"
+            CornerRadius="20"
+            HasShadow="False"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="CenterAndExpand">
+            <Grid
+                HorizontalOptions="FillAndExpand"
+                RowSpacing="0"
+                VerticalOptions="CenterAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Label
+                    Grid.Row="0"
+                    Margin="24"
+                    HorizontalOptions="StartAndExpand"
+                    Style="{StaticResource PopupTitle}"
+                    Text="Name your todo list"
+                    VerticalOptions="CenterAndExpand">
+                    <Label.Triggers>
+                        <DataTrigger
+                            Binding="{Binding IsEdit}"
+                            TargetType="Label"
+                            Value="True">
+                            <Setter Property="Text" Value="Edit your to list name" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+                <Frame
+                    Grid.Row="1"
+                    Margin="24,10,24,5"
+                    Padding="0"
+                    BackgroundColor="Transparent"
+                    BorderColor="{Binding BorderGrayColor}"
+                    CornerRadius="0"
+                    HasShadow="False">
+                    <StackLayout
+                        Padding="0"
+                        HorizontalOptions="FillAndExpand"
+                        Orientation="Horizontal"
+                        VerticalOptions="FillAndExpand">
+                        <Entry
+                            x:Name="entryListName"
+                            Margin="{OnPlatform Android='1',
+                                                iOS='0'}"
+                            HeightRequest="46"
+                            HorizontalOptions="FillAndExpand"
+                            MaxLength="64"
+                            Style="{StaticResource PopupEntry}"
+                            Text="{Binding ListName}" />
+                    </StackLayout>
+                </Frame>
+                <Label
+                    Grid.Row="1"
+                    Margin="{OnPlatform Android='24,0,0,0',
+                                        iOS='24,4,0,0'}"
+                    Padding="10,0"
+                    HeightRequest="16"
+                    HorizontalOptions="Start"
+                    Style="{StaticResource PopupDescription}"
+                    Text="Todo list name"
+                    VerticalOptions="Start" />
+
+                <Grid
+                    Grid.Row="3"
+                    HorizontalOptions="FillAndExpand"
+                    RowSpacing="0 "
+                    VerticalOptions="FillAndExpand">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="1" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Command="{Binding GenericCommand}"
+                        CommandParameter="cancel"
+                        Style="{StaticResource DefaultButton}"
+                        Text="Cancel" />
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Command="{Binding GenericCommand}"
+                        CommandParameter="save"
+                        IsEnabled="{Binding IsCreateEnabled}"
+                        Style="{StaticResource DefaultButton}"
+                        Text="Create">
+                        <Button.Triggers>
+                            <DataTrigger
+                                Binding="{Binding IsEdit}"
+                                TargetType="Button"
+                                Value="True">
+                                <Setter Property="Text" Value="Update" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </Grid>
+            </Grid>
+        </Frame>
+    </controls:Popup.Content>
+</controls:Popup>

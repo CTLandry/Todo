@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using Todo.Infrastructure.Exceptions;
 using Xamarin.Forms;
 
 namespace Todo.Views
@@ -9,7 +9,15 @@ namespace Todo.Views
     {
         public TodoListView()
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
+            }
+            catch (Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+            }
+           
         }
     }
 }
