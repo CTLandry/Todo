@@ -18,8 +18,8 @@ namespace Todo.ViewModels
     {
         #region Properties
 
-        private ObservableCollection<TodoListModel> todoLists;
-        public ObservableCollection<TodoListModel> TodoLists
+        private List<TodoListModel> todoLists;
+        public List<TodoListModel> TodoLists
         {
             set { SetProperty(ref todoLists, value); }
             get { return todoLists; }
@@ -62,6 +62,8 @@ namespace Todo.ViewModels
             try
             {
                 this.cachingService = cacheService;
+                Task.Run(async () => await RefreshTodoLists());
+
             }
             catch (Exception ex)
             {
@@ -77,7 +79,18 @@ namespace Todo.ViewModels
 
         #region PrivateMethods
 
-       
+        private async Task RefreshTodoLists()
+        {
+            try
+            {
+                TodoLists = await cachingService.GetAllLists();
+            }
+            catch (Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+            }
+        }
+
         #endregion
 
     }

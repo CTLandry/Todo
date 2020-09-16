@@ -19,14 +19,7 @@ namespace Todo.ViewModels
             get { return isBusy; }
             set { SetProperty(ref isBusy, value); }
         }
-
-        string title = string.Empty;
-        public string Title
-        {
-            get { return title; }
-            set { SetProperty(ref title, value); }
-        }
-       
+        
         public _BaseViewModel()
         {
            

@@ -4,7 +4,7 @@ using Prism.Unity;
 using Todo.Infrastructure.IoC;
 using Todo.Views;
 using Todo.Infrastructure.Exceptions;
-
+using Xamarin.Forms;
 
 namespace Todo
 {
@@ -17,7 +17,7 @@ namespace Todo
         protected override async void OnInitialized()
         {
             InitializeComponent();
-            App.Current.MainPage = new TodoListView();
+            App.Current.MainPage = new NavigationPage(new TodoListView());
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)

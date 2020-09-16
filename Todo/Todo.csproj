@@ -35,6 +35,7 @@
     <Folder Include="Infrastructure\Enumerations\" />
     <Folder Include="ViewModels\CreateListViewModel\" />
     <Folder Include="Controls\" />
+    <Folder Include="Infrastructure\Converters\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Styles\Theme.xaml.cs">

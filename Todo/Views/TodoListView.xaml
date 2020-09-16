@@ -3,18 +3,54 @@
     x:Class="Todo.Views.TodoListView"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:Todo.Infrastructure.Converters"
     xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
     Title="Todo List"
     prism:ViewModelLocator.AutowireViewModel="True">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:ThresholdConverter x:Key="ListItemThreshold" Threshold="1" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <!--  PageContainer  -->
     <Grid
         x:Name="ContainerGrid"
+        Margin="20,100,20,40"
         HorizontalOptions="FillAndExpand"
         VerticalOptions="FillAndExpand">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+
+        <!--  TodoList  -->
+        <Grid
+            x:Name="TodoListGrid"
+            Grid.Row="0"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <CollectionView x:Name="todoListCollectionView" ItemsSource="{Binding TodoLists}" />
+            <Button
+                Grid.Row="1"
+                Padding="10"
+                Command="{Binding ShowCreateTodoListCommand}"
+                HorizontalOptions="CenterAndExpand"
+                Style="{StaticResource DefaultButton}"
+                Text="Add Todo List"
+                VerticalOptions="EndAndExpand" />
+            <Grid.Triggers>
+                <MultiTrigger TargetType="Grid">
+                    <MultiTrigger.Conditions>
+                        <BindingCondition Binding="{Binding Source={x:Reference todoListCollectionView}, Path=ItemsSource.Count, Converter={StaticResource ListItemThreshold}}" Value="True" />
+                    </MultiTrigger.Conditions>
+                    <Setter Property="IsVisible" Value="True" />
+                </MultiTrigger>
+            </Grid.Triggers>
+        </Grid>
 
         <!--  EmptyList  -->
         <Grid
@@ -25,58 +61,40 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Label
                 Grid.Row="0"
+                HorizontalOptions="CenterAndExpand"
                 Style="{StaticResource TextHeader}"
                 Text="You Have No Active Lists" />
             <Label
                 Grid.Row="1"
+                Margin="0,40,0,0"
+                HorizontalOptions="CenterAndExpand"
+                HorizontalTextAlignment="Center"
                 Style="{StaticResource TextHeader1}"
                 Text="Begin by adding one with the add button below" />
             <Button
                 Grid.Row="2"
+                Padding="10"
+                Command="{Binding ShowCreateTodoListCommand}"
                 HorizontalOptions="CenterAndExpand"
                 Style="{StaticResource DefaultButton}"
-                Text="Add List"
-                VerticalOptions="CenterAndExpand" />
+                Text="Add Todo List"
+                VerticalOptions="EndAndExpand" />
             <Grid.Triggers>
-                <DataTrigger
-                    Binding="{Binding Source={x:Reference TodoListsCollectionView}, Path=ItemsSource.Count}"
-                    TargetType="CollectionView"
-                    Value="0">
-                    <Setter Property="IsVisible" Value="True" />
-                </DataTrigger>
+                <MultiTrigger TargetType="Grid">
+                    <MultiTrigger.Conditions>
+                        <BindingCondition Binding="{Binding Source={x:Reference todoListCollectionView}, Path=ItemsSource.Count, Converter={StaticResource ListItemThreshold}}" Value="True" />
+                    </MultiTrigger.Conditions>
+                    <Setter Property="IsVisible" Value="False" />
+                </MultiTrigger>
+
             </Grid.Triggers>
         </Grid>
 
-        <!--  TodoListGrid  -->
-        <Grid
-            x:Name="TodoListGrid"
-            Grid.Row="0"
-            HorizontalOptions="FillAndExpand"
-            VerticalOptions="FillAndExpand">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <CollectionView x:Name="TodoListsCollectionView" ItemsSource="{Binding TodoLists}" />
-            <Button
-                Grid.Row="2"
-                HorizontalOptions="CenterAndExpand"
-                Style="{StaticResource DefaultButton}"
-                Text="Add List"
-                VerticalOptions="CenterAndExpand" />
-            <Grid.Triggers>
-                <DataTrigger
-                    Binding="{Binding Source={x:Reference TodoListsCollectionView}, Path=ItemsSource.Count}"
-                    TargetType="CollectionView"
-                    Value="0">
-                    <Setter Property="IsVisible" Value="False" />
-                </DataTrigger>
-            </Grid.Triggers>
-        </Grid>
+
 
 
     </Grid>
