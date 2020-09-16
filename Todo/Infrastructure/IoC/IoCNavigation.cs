@@ -18,6 +18,7 @@ namespace Todo.Infrastructure.IoC
             {
                 containerRegistry.RegisterForNavigation<NavigationPage>();
                 containerRegistry.RegisterForNavigation<TodoListView, TodoListViewModel>();
+                containerRegistry.RegisterForNavigation<TodoItemView, TodoItemViewModel>();
             }
             catch (Exception ex)
             {

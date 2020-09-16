@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Prism.Navigation;
 using Rg.Plugins.Popup.Services;
 using Todo.Infrastructure.Exceptions;
 using Todo.Models;
@@ -30,6 +31,7 @@ namespace Todo.ViewModels
         #region Services
 
         public readonly ICacheService cachingService;
+        public readonly INavigationService navigationService;
 
         #endregion
 
@@ -97,16 +99,34 @@ namespace Todo.ViewModels
             }
         }
 
+        private ICommand navigateToTodoItems;
+        public ICommand NavigateToTodoItemsCommand
+        {
+            get
+            {
+                return changeActiveState ??
+                new Command(async (list) =>
+                {
+                    IsBusy = true;
+                    var navigationParams = new NavigationParameters();
+                    navigationParams.Add("todolist", list);
+                    await navigationService.NavigateAsync("", navigationParams);
+                    IsBusy = false;
+                });
+            }
+        }
+
         #endregion
 
         #region Constructors
 
-        public TodoListViewModel(ICacheService cacheService)
+        public TodoListViewModel(ICacheService cacheService, INavigationService navigationService)
         {
             
             try
             {
                 this.cachingService = cacheService;
+                this.navigationService = navigationService;
                 Task.Run(async () => await RefreshTodoLists());
 
             }
