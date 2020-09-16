@@ -143,6 +143,59 @@ namespace Todo.Services
             }
         }
 
+        public async Task<bool> DeleteList(TodoListModel list)
+        {
+           
+            try
+            {
+                if(list.TodoItems != null)
+                {
+                    foreach (TodoItemModel todoItem in list.TodoItems)
+                    {
+                        await database.DeleteAsync(todoItem);
+                    } 
+                }
 
+                await database.DeleteAsync(list);
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+                return false;
+            }
+        }
+
+        public async Task<bool> ChangeListActiveState(TodoListModel list)
+        {
+            try
+            {
+                if(list != null)
+                {
+                    list.Active = !list.Active;
+
+                    if(list.Active)
+                    {
+                        var allLists = await GetAllLists();
+                        foreach(TodoListModel todo in allLists)
+                        {
+                            todo.Active = false;
+                            await SaveList(todo);
+                        }
+                    }
+
+                    await SaveList(list);
+
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+                return false;
+            }
+        }
     }
 }

@@ -21,8 +21,11 @@
     <Color x:Key="ButtonTextColor_Dark">#A2d2C9</Color>
     <Color x:Key="ButtonColor_Light">#6D031C</Color>
     <Color x:Key="ButtonTextColor_Light">#A2d2C9</Color>
-    <Color x:Key="PopupBackground_Dark">#A2d2C9</Color>
-    <Color x:Key="PopupBackground_Light">#A79086</Color>
+
+    <Color x:Key="PopupBackground">#673E37</Color>
+    <Color x:Key="PopupEntryBackground">#000000</Color>
+    <Color x:Key="PopupBodyTextColor">#A2d2C9</Color>
+
 
     <Color x:Key="NavigationBar_Dark">#6D031C</Color>
     <Color x:Key="NavigationBar_Light">#A79086</Color>
@@ -54,11 +57,6 @@
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource BackgroundColor_Dark}, Light={StaticResource BackgroundColor_Light}}" />
     </Style>
 
-    <!--  Popup Styles  -->
-    <!--<Style ApplyToDerivedTypes="True" TargetType="PopupPage">
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource PopupBackground_Dark}, Light={StaticResource PopupBackground_Light}}" />
-    </Style>-->
-
     <!--  Label Styles  -->
     <Style x:Key="TextHeader" TargetType="Label">
         <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource TextColor_Dark}, Light={StaticResource TextColor_Light}}" />
@@ -83,12 +81,32 @@
         <Setter Property="FontAttributes" Value="Italic" />
     </Style>
 
+    <Style x:Key="PopupTitle" TargetType="Label">
+        <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource PopupBodyTextColor}, Light={StaticResource PopupBodyTextColor}}" />
+        <Setter Property="FontSize" Value="{StaticResource TextSizeHeader1}" />
+        <Setter Property="FontAttributes" Value="Bold" />
+    </Style>
+
+    <Style x:Key="PopupDescription" TargetType="Label">
+        <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource PopupBodyTextColor}, Light={StaticResource PopupBodyTextColor}}" />
+        <Setter Property="FontSize" Value="{StaticResource TextSizeBody1}" />
+        <Setter Property="FontAttributes" Value="Italic" />
+    </Style>
+
     <!--  Button Styles  -->
-    <Style x:Key="DefaultButton" TargetType="Label">
+    <Style x:Key="DefaultButton" TargetType="Button">
         <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource ButtonTextColor_Dark}, Light={StaticResource ButtonTextColor_Light}}" />
         <Setter Property="FontSize" Value="{StaticResource ButtonTextSize}" />
         <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource ButtonColor_Dark}, Light={StaticResource ButtonColor_Light}}" />
+    </Style>
+
+    <!--  Entry Styles  -->
+
+    <Style x:Key="PopupEntry" TargetType="Entry">
+        <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource ButtonTextColor_Dark}, Light={StaticResource ButtonTextColor_Light}}" />
+        <Setter Property="FontSize" Value="{StaticResource TextSizeBody}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource PopupEntryBackground}" />
     </Style>
 
 </ResourceDictionary>

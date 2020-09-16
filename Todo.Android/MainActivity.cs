@@ -7,6 +7,7 @@ using Prism.Ioc;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
+using Xamarin.Forms;
 
 namespace Todo.Droid
 {
@@ -23,6 +24,8 @@ namespace Todo.Droid
                     typeof(Analytics), typeof(Crashes));
 
             Rg.Plugins.Popup.Popup.Init(this, bundle);
+
+            Forms.SetFlags("SwipeView_Experimental");
 
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;

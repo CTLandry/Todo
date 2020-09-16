@@ -44,13 +44,58 @@ namespace Todo.ViewModels
                 new Command(async (list) =>
                 {
                     IsBusy = true;
-                    await PopupNavigation.Instance.PushAsync(new CreateListView(this, new TodoListModel(true)));
+                    await PopupNavigation.Instance.PushAsync(new CreateListView(this));
                     IsBusy = false;
                 });
             }
         }
 
-       
+        private ICommand editTodoList;
+        public ICommand EditTodoListCommand
+        {
+            get
+            {
+                return editTodoList ??
+                new Command(async (list) =>
+                {
+                    IsBusy = true;
+                    await PopupNavigation.Instance.PushAsync(new CreateListView(this, (TodoListModel)list));
+                    IsBusy = false;
+                });
+            }
+        }
+
+        private ICommand deleteTodoList;
+        public ICommand DeleteTodoList
+        {
+            get
+            {
+                return deleteTodoList ??
+                new Command(async (list) =>
+                {
+                IsBusy = true;
+                await cachingService.DeleteList((TodoListModel)list);
+                await RefreshTodoLists();
+                IsBusy = false;
+                });
+            }
+        }
+
+        private ICommand changeActiveState;
+        public ICommand ChangeActiveStateCommand
+        {
+            get
+            {
+                return changeActiveState ??
+                new Command(async (list) =>
+                {
+                    IsBusy = true;
+                    await cachingService.ChangeListActiveState((TodoListModel)list);
+                    await RefreshTodoLists();
+                    IsBusy = false;
+                });
+            }
+        }
 
         #endregion
 
@@ -75,11 +120,7 @@ namespace Todo.ViewModels
 
         #region PublicMethods
 
-        #endregion
-
-        #region PrivateMethods
-
-        private async Task RefreshTodoLists()
+        public async Task RefreshTodoLists()
         {
             try
             {
@@ -90,6 +131,12 @@ namespace Todo.ViewModels
                 ErrorTracker.ReportError(ex);
             }
         }
+
+        #endregion
+
+        #region PrivateMethods
+
+
 
         #endregion
 

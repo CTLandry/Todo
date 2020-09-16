@@ -7,7 +7,8 @@
     <controls:Popup.Content>
         <Frame
             Margin="24"
-            Padding="0"
+            Padding="10"
+            BackgroundColor="{StaticResource PopupBackground}"
             CornerRadius="20"
             HasShadow="False"
             HorizontalOptions="FillAndExpand"
@@ -26,7 +27,7 @@
                     Grid.Row="0"
                     Margin="24"
                     HorizontalOptions="StartAndExpand"
-                    Style="{StaticResource TextBody}"
+                    Style="{StaticResource PopupTitle}"
                     Text="Name your todo list"
                     VerticalOptions="CenterAndExpand">
                     <Label.Triggers>
@@ -56,8 +57,10 @@
                             Margin="{OnPlatform Android='1',
                                                 iOS='0'}"
                             HeightRequest="46"
+                            HorizontalOptions="FillAndExpand"
                             MaxLength="64"
-                            Text="{Binding TodoList.Name}" />
+                            Style="{StaticResource PopupEntry}"
+                            Text="{Binding ListName}" />
                     </StackLayout>
                 </Frame>
                 <Label
@@ -67,7 +70,7 @@
                     Padding="10,0"
                     HeightRequest="16"
                     HorizontalOptions="Start"
-                    Style="{StaticResource TextBody1}"
+                    Style="{StaticResource PopupDescription}"
                     Text="Todo list name"
                     VerticalOptions="Start" />
 
@@ -85,20 +88,6 @@
                         <ColumnDefinition Width="1" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <BoxView
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="3"
-                        BackgroundColor="DarkGreen"
-                        HeightRequest="1"
-                        HorizontalOptions="FillAndExpand" />
-                    <BoxView
-                        Grid.Row="0"
-                        Grid.RowSpan="2"
-                        Grid.Column="1"
-                        BackgroundColor="DarkGreen"
-                        VerticalOptions="FillAndExpand"
-                        WidthRequest="1" />
                     <Button
                         Grid.Row="1"
                         Grid.Column="0"
@@ -109,7 +98,8 @@
                     <Button
                         Grid.Row="1"
                         Grid.Column="2"
-                        CommandParameter="create"
+                        Command="{Binding GenericCommand}"
+                        CommandParameter="save"
                         IsEnabled="{Binding IsCreateEnabled}"
                         Style="{StaticResource DefaultButton}"
                         Text="Create">

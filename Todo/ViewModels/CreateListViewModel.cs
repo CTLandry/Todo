@@ -22,13 +22,16 @@ namespace Todo.ViewModels
         #region Properties
 
         private TodoListModel todoList;
-        public TodoListModel TodoList
+       
+
+        private string listName = string.Empty;
+        public string ListName
         {
-            get { return todoList; }
+            get { return listName; }
             set
             {
-                SetProperty(ref todoList, value);
-                IsCreateEnabled = !string.IsNullOrWhiteSpace(value.Name);
+                SetProperty(ref listName, value);
+                IsCreateEnabled = !string.IsNullOrWhiteSpace(value);
             }
         }
 
@@ -68,11 +71,19 @@ namespace Todo.ViewModels
         #endregion
 
      
-        public CreateListViewModel(TodoListViewModel parentVM, TodoListModel todoList)
+        public CreateListViewModel(TodoListViewModel parentVM)
         {
             parentViewModel = parentVM;
            
-            TodoList = todoList;
+        }
+
+        public CreateListViewModel(TodoListViewModel parentVM, TodoListModel todoList)
+        {
+            parentViewModel = parentVM;
+            this.todoList = todoList;
+            ListName = todoList.Name;
+            IsEdit = true;
+
         }
 
         #region Private Methods
@@ -83,9 +94,20 @@ namespace Todo.ViewModels
             {
                 switch (action)
                 {
-                    case "create":
+                    case "save":
                         {
-                            await parentViewModel.cachingService.SaveList(TodoList);
+                            if(IsEdit)
+                            {
+                                todoList.Name = ListName;
+                                await parentViewModel.cachingService.SaveList(todoList);
+                            }
+                            else
+                            {
+                                await parentViewModel.cachingService.SaveList(new TodoListModel(ListName));
+                            }
+                            
+                            await parentViewModel.RefreshTodoLists();
+                            await PopupNavigation.Instance.PopAsync();
                             break;
                         }
                     case "cancel":

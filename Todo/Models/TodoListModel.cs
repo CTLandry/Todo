@@ -44,9 +44,10 @@ namespace Todo.Models
            
         }
 
-        public TodoListModel(bool create)
+        public TodoListModel(string name)
         {
             Id = Guid.NewGuid();
+            Name = name;
             TodoItems = new ObservableCollection<TodoItemModel>();
         }
 

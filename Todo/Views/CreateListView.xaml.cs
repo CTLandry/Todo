@@ -16,6 +16,12 @@ namespace Todo.Views
 
         #endregion
 
+        public CreateListView(TodoListViewModel parentVM)
+        {
+            InitializeComponent();
+            BindingContext = viewModel = new CreateListViewModel(parentVM);
+        }
+
         public CreateListView(TodoListViewModel parentVM, TodoListModel todoList)
         {
             InitializeComponent();

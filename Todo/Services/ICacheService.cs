@@ -10,6 +10,8 @@ namespace Todo.Services
         
         Task<List<TodoListModel>> GetAllLists();
         Task<TodoListModel> GetList(Guid listId);
+        Task<bool> DeleteList(TodoListModel list);
+        Task<bool> ChangeListActiveState(TodoListModel list);
         Task<bool> SaveList(TodoListModel list);
         Task<bool> DeleteTodoItem(TodoItemModel todoItem);
         Task<bool> SaveTodoItem(TodoItemModel todoItem, Guid listId);
