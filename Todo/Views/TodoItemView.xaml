@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="Todo.Views.TodoItemView"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:Todo.Infrastructure.Converters"
+    xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+    x:Name="TodoItemsPage"
+    Title="Todo Items"
+    prism:ViewModelLocator.AutowireViewModel="True">
+
+    <Label Text="Test" TextColor="Black" />
+
+</ContentPage>

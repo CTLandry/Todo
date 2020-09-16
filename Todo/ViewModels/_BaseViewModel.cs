@@ -11,8 +11,7 @@ namespace Todo.ViewModels
     /// </summary>
     public abstract class _BaseViewModel : INotifyPropertyChanged
     {
-        
-
+       
         bool isBusy = false;
         public bool IsBusy
         {

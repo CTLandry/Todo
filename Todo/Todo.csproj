@@ -43,5 +43,8 @@
     <Compile Update="Styles\DefaultTheme.xaml.cs">
       <DependentUpon>DefaultTheme.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\TodoItemView.xaml.cs">
+      <DependentUpon>TodoItemView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

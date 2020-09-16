@@ -23,7 +23,7 @@ namespace Todo.Droid
             AppCenter.Start("81d20aa0-193e-4ed1-b68a-71ed2a9b5ec1",
                     typeof(Analytics), typeof(Crashes));
 
-            Rg.Plugins.Popup.Popup.Init(this, bundle);
+            Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
 
             Forms.SetFlags("SwipeView_Experimental");
 

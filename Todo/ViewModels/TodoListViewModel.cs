@@ -26,6 +26,13 @@ namespace Todo.ViewModels
             get { return todoLists; }
         }
 
+        private TodoListModel selectedTodoList;
+        public  TodoListModel SelectedTodoList
+        {
+            set { SetProperty(ref selectedTodoList, value); }
+            get { return selectedTodoList; }
+        }
+
         #endregion
 
         #region Services
@@ -104,13 +111,17 @@ namespace Todo.ViewModels
         {
             get
             {
-                return changeActiveState ??
+                return navigateToTodoItems ??
                 new Command(async (list) =>
                 {
                     IsBusy = true;
-                    var navigationParams = new NavigationParameters();
-                    navigationParams.Add("todolist", list);
-                    await navigationService.NavigateAsync("", navigationParams);
+                    var listModel = (TodoListModel)list;
+                    if(listModel.Active && !listModel.Completed)
+                    {
+                        var navigationParams = new NavigationParameters();
+                        navigationParams.Add("todolist", list);
+                        await navigationService.NavigateAsync("TodoItemView", navigationParams);
+                    }
                     IsBusy = false;
                 });
             }
