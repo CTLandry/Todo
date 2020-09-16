@@ -35,6 +35,13 @@ namespace Todo.Models
             get { return active; }
         }
 
+        private bool completed;
+        public bool Completed
+        {
+            set { SetProperty(ref completed, value); }
+            get { return completed; }
+        }
+
         #endregion
 
         #region Constructors

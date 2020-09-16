@@ -22,18 +22,11 @@ namespace Todo.Models
             get { return name; }
         }
 
-        private string description;
-        public string Description
+        private bool isChecked = false;
+        public bool Checked
         {
-            set { SetProperty(ref description, value); }
-            get { return description; }
-        }
-
-        private bool completed = false;
-        public bool Completed
-        {
-            set { SetProperty(ref completed, value); }
-            get { return completed; }
+            set { SetProperty(ref isChecked, value); }
+            get { return isChecked; }
         }
 
         #endregion
@@ -48,14 +41,6 @@ namespace Todo.Models
         {
             Id = Guid.NewGuid();
             Name = name;
-            
-        }
-
-        public TodoItemModel(string name, string description)
-        {
-            Id = Guid.NewGuid();
-            Name = name;
-            Description = description;
             
         }
 

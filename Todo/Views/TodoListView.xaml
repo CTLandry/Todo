@@ -44,7 +44,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <!--  SwipeItems  -->
-                        <SwipeView BackgroundColor="Transparent">
+                        <SwipeView BackgroundColor="Transparent" IsEnabled="{Binding Completed, Converter={StaticResource InverseBoolean}}">
                             <SwipeView.LeftItems>
                                 <SwipeItems>
                                     <SwipeItem
@@ -91,6 +91,32 @@
                                     TextColor="Green"
                                     VerticalOptions="Center" />
 
+                                <Label
+                                    Grid.Row="0"
+                                    Margin="0,0,0,10"
+                                    HorizontalOptions="End"
+                                    IsVisible="{Binding Completed}"
+                                    Style="{StaticResource TextHeader1}"
+                                    Text="Complete"
+                                    TextColor="Green"
+                                    VerticalOptions="Center" />
+
+                                <Grid.Triggers>
+                                    <MultiTrigger TargetType="Grid">
+                                        <MultiTrigger.Conditions>
+                                            <BindingCondition Binding="{Binding Completed}" Value="True" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="IsEnabled" Value="False" />
+                                        <Setter Property="Opacity" Value=".5" />
+                                    </MultiTrigger>
+                                    <MultiTrigger TargetType="Grid">
+                                        <MultiTrigger.Conditions>
+                                            <BindingCondition Binding="{Binding Active}" Value="False" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="IsEnabled" Value="False" />
+                                        <Setter Property="Opacity" Value=".5" />
+                                    </MultiTrigger>
+                                </Grid.Triggers>
                             </Grid>
                         </SwipeView>
                     </DataTemplate>

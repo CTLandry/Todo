@@ -11,7 +11,7 @@ namespace Todo.Services
 
     public class CacheService : ICacheService
     {
-       
+
         private readonly SQLiteAsyncConnection database;
 
         public CacheService()
@@ -36,7 +36,7 @@ namespace Todo.Services
         {
             try
             {
-                return await database.QueryAsync<TodoListModel>("SELECT * FROM TodoList ORDER BY Active desc");
+                return await database.QueryAsync<TodoListModel>("SELECT * FROM TodoList");
             }
             catch (Exception ex)
             {
@@ -65,18 +65,19 @@ namespace Todo.Services
             {
                 var existingList = await GetList(list.Id);
 
-                if(existingList != null)
+                if (existingList != null)
                 {
                     await database.UpdateAsync(list);
-                    
+
                 }
                 else
                 {
                     await database.InsertAsync(list);
+                    await ChangeListActiveState(list);
                 }
 
 
-                foreach(TodoItemModel item in list.TodoItems)
+                foreach (TodoItemModel item in list.TodoItems)
                 {
                     await SaveTodoItem(item, list.Id);
                 }
@@ -145,15 +146,15 @@ namespace Todo.Services
 
         public async Task<bool> DeleteList(TodoListModel list)
         {
-           
+
             try
             {
-                if(list.TodoItems != null)
+                if (list.TodoItems != null)
                 {
                     foreach (TodoItemModel todoItem in list.TodoItems)
                     {
                         await database.DeleteAsync(todoItem);
-                    } 
+                    }
                 }
 
                 await database.DeleteAsync(list);
@@ -171,31 +172,48 @@ namespace Todo.Services
         {
             try
             {
-                if(list != null)
+
+                list.Active = !list.Active;
+
+                if (list.Active)
                 {
-                    list.Active = !list.Active;
-
-                    if(list.Active)
+                    var allLists = await GetAllLists();
+                    foreach (TodoListModel todo in allLists)
                     {
-                        var allLists = await GetAllLists();
-                        foreach(TodoListModel todo in allLists)
-                        {
-                            todo.Active = false;
-                            await SaveList(todo);
-                        }
+                        todo.Active = false;
+                        await SaveList(todo);
                     }
-
-                    await SaveList(list);
-
-                    return true;
                 }
-                return false;
+
+                await SaveList(list);
+
+                return true;
+
+
             }
             catch (Exception ex)
             {
                 ErrorTracker.ReportError(ex);
                 return false;
             }
+        }
+
+        public async Task<bool> CompleteList(TodoListModel list)
+        {
+            try
+            {
+                list.Active = false;
+                list.Completed = true;
+                await SaveList(list);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+                return false;
+            }
+            
         }
     }
 }
