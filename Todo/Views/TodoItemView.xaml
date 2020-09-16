@@ -9,6 +9,180 @@
     Title="Todo Items"
     prism:ViewModelLocator.AutowireViewModel="True">
 
-    <Label Text="Test" TextColor="Black" />
+    <!--  PageContainer  -->
+    <Grid
+        x:Name="ContainerGrid"
+        HorizontalOptions="FillAndExpand"
+        VerticalOptions="FillAndExpand">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+
+        <!--  TodoItemList  -->
+        <Grid
+            x:Name="TodoItemListGrid"
+            Grid.Row="0"
+            Margin="0,20,0,40"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <CollectionView
+                x:Name="todoListCollectionView"
+                BackgroundColor="Transparent"
+                ItemsSource="{Binding TodoLists}"
+                SelectionMode="None">
+                <!--  CollectionViewItemsDefinition  -->
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <!--  SwipeItems  -->
+                        <SwipeView IsEnabled="{Binding Completed, Converter={StaticResource InverseBoolean}}">
+                            <SwipeView.LeftItems>
+                                <SwipeItems Mode="Execute">
+
+                                    <SwipeItem
+                                        BackgroundColor="Red"
+                                        Command="{Binding Path=BindingContext.DeleteTodoItem, Source={x:Reference Name=TodoItemsPage}}"
+                                        CommandParameter="{Binding .}"
+                                        Text="Delete" />
+
+                                </SwipeItems>
+                            </SwipeView.LeftItems>
+
+                            <!--  RowDefinitions  -->
+                            <Grid
+                                Margin="0,30,0,0"
+                                Padding="40,30,40,0"
+                                BackgroundColor="Transparent">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Label
+                                    Grid.Row="0"
+                                    Style="{StaticResource TextHeader1}"
+                                    Text="{Binding Name}"
+                                    VerticalOptions="Center" />
+                                <Label
+                                    Grid.Row="0"
+                                    HorizontalOptions="End"
+                                    IsVisible="{Binding Active}"
+                                    Style="{StaticResource TextHeader1}"
+                                    Text="Active"
+                                    TextColor="Green"
+                                    VerticalOptions="Center" />
+
+                                <Label
+                                    Grid.Row="0"
+                                    HorizontalOptions="End"
+                                    IsVisible="{Binding Completed}"
+                                    Style="{StaticResource TextHeader1}"
+                                    Text="Complete"
+                                    TextColor="Green"
+                                    VerticalOptions="Center" />
+
+                                <Grid.Triggers>
+                                    <MultiTrigger TargetType="Grid">
+                                        <MultiTrigger.Conditions>
+                                            <BindingCondition Binding="{Binding Completed}" Value="True" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="IsEnabled" Value="False" />
+                                        <Setter Property="Opacity" Value=".5" />
+                                    </MultiTrigger>
+                                    <MultiTrigger TargetType="Grid">
+                                        <MultiTrigger.Conditions>
+                                            <BindingCondition Binding="{Binding Active}" Value="False" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="IsEnabled" Value="False" />
+                                        <Setter Property="Opacity" Value=".5" />
+                                    </MultiTrigger>
+                                </Grid.Triggers>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference TodoListPage}, Mode=OneWay, Path=BindingContext.NavigateToTodoItemsCommand}" CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+                            </Grid>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Button
+                Grid.Row="1"
+                Padding="10"
+                Command="{Binding ShowCreateTodoListCommand}"
+                HorizontalOptions="CenterAndExpand"
+                Style="{StaticResource DefaultButton}"
+                Text="Add Todo List"
+                VerticalOptions="EndAndExpand" />
+            <Grid.Triggers>
+                <MultiTrigger TargetType="Grid">
+                    <MultiTrigger.Conditions>
+                        <BindingCondition Binding="{Binding Source={x:Reference todoListCollectionView}, Path=ItemsSource.Count, Converter={StaticResource ListItemThreshold}}" Value="True" />
+                    </MultiTrigger.Conditions>
+                    <Setter Property="IsVisible" Value="True" />
+                </MultiTrigger>
+            </Grid.Triggers>
+        </Grid>
+
+        <!--  EmptyItemList  -->
+        <Grid
+            x:Name="EmptyTodoGrid"
+            Grid.Row="0"
+            Margin="20,100,20,40"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Label
+                Grid.Row="0"
+                HorizontalOptions="CenterAndExpand"
+                Style="{StaticResource TextHeader}"
+                Text="You Have No Todo Items" />
+            <Label
+                Grid.Row="1"
+                Margin="0,40,0,0"
+                HorizontalOptions="CenterAndExpand"
+                HorizontalTextAlignment="Center"
+                Style="{StaticResource TextHeader1}"
+                Text="Begin by adding one with the add button below" />
+            <StackLayout
+                Grid.Row="2"
+                HorizontalOptions="CenterAndExpand"
+                Orientation="Horizontal"
+                Spacing="20"
+                VerticalOptions="EndAndExpand">
+                <Button
+                    Padding="10"
+                    Command="{Binding CompleteListCommand}"
+                    Style="{StaticResource DefaultButton}"
+                    Text="Complete List"
+                    VerticalOptions="EndAndExpand" />
+
+                <Button
+                    Padding="10"
+                    Command="{Binding SaveTodoItemCommand}"
+                    Style="{StaticResource DefaultButton}"
+                    Text="Add Todo Item"
+                    VerticalOptions="EndAndExpand" />
+
+            </StackLayout>
+
+            <!--<Grid.Triggers>
+                <MultiTrigger TargetType="Grid">
+                    <MultiTrigger.Conditions>
+                        <BindingCondition Binding="{Binding Source={x:Reference todoListCollectionView}, Path=ItemsSource.Count, Converter={StaticResource ListItemThreshold}}" Value="True" />
+                    </MultiTrigger.Conditions>
+                    <Setter Property="IsVisible" Value="False" />
+                </MultiTrigger>
+
+            </Grid.Triggers>-->
+        </Grid>
+
+    </Grid>
 
 </ContentPage>

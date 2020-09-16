@@ -105,7 +105,7 @@ namespace Todo.ViewModels
                             {
                                 await parentViewModel.cachingService.SaveList(new TodoListModel(ListName));
                             }
-                            
+
                             await parentViewModel.RefreshTodoLists();
                             await PopupNavigation.Instance.PopAsync();
                             break;

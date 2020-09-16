@@ -13,6 +13,8 @@ namespace Todo.Models
         [PrimaryKey]
         public Guid Id { get; set; }
 
+        public bool TodoItemsEdited = false;
+
         private string name;
         public string Name
         {
@@ -24,7 +26,11 @@ namespace Todo.Models
         [SQLite.Ignore]
         public ObservableCollection<TodoItemModel> TodoItems
         {
-            set { SetProperty(ref todoItems, value); }
+            set
+            {
+                SetProperty(ref todoItems, value);
+                TodoItemsEdited = true;
+            }
             get { return todoItems; }
         }
 

@@ -67,19 +67,30 @@ namespace Todo.Services
 
                 if (existingList != null)
                 {
+                    
+                    if (list.TodoItemsEdited)
+                    {
+                        list.TodoItemsEdited = false;
+                       
+                        foreach (TodoItemModel item in list.TodoItems)
+                        {
+                            await DeleteTodoItem(item);
+                        }
+
+                        foreach (TodoItemModel item in list.TodoItems)
+                        {
+                            await SaveTodoItem(item, list.Id);
+                        }
+                    }
+
                     await database.UpdateAsync(list);
+
 
                 }
                 else
                 {
                     await database.InsertAsync(list);
                     await ChangeListActiveState(list);
-                }
-
-
-                foreach (TodoItemModel item in list.TodoItems)
-                {
-                    await SaveTodoItem(item, list.Id);
                 }
 
                 return true;

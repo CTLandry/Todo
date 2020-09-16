@@ -15,8 +15,10 @@ using Xamarin.Forms;
 
 namespace Todo.ViewModels
 {
-    public class TodoListViewModel : _BaseViewModel
+    public class TodoListViewModel : _BaseViewModel, INavigationAware
     {
+        
+
         #region Properties
 
         private List<TodoListModel> todoLists;
@@ -24,13 +26,6 @@ namespace Todo.ViewModels
         {
             set { SetProperty(ref todoLists, value); }
             get { return todoLists; }
-        }
-
-        private TodoListModel selectedTodoList;
-        public  TodoListModel SelectedTodoList
-        {
-            set { SetProperty(ref selectedTodoList, value); }
-            get { return selectedTodoList; }
         }
 
         #endregion
@@ -139,7 +134,27 @@ namespace Todo.ViewModels
                 this.cachingService = cacheService;
                 this.navigationService = navigationService;
                 Task.Run(async () => await RefreshTodoLists());
+            }
+            catch (Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+            }
+        }
 
+        #endregion
+
+        #region NavigationAware
+
+        public void OnNavigatedFrom(INavigationParameters parameters)
+        {
+
+        }
+
+        public void OnNavigatedTo(INavigationParameters parameters)
+        {
+            try
+            {
+                Task.Run(async () => await RefreshTodoLists());
             }
             catch (Exception ex)
             {

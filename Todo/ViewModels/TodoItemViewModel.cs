@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Input;
 using Prism.Navigation;
+using Rg.Plugins.Popup.Services;
 using Todo.Infrastructure.Exceptions;
 using Todo.Models;
 using Todo.Services;
+using Xamarin.Forms;
 
 namespace Todo.ViewModels
 {
@@ -28,6 +31,53 @@ namespace Todo.ViewModels
         #endregion
 
         #region Commands
+
+        private ICommand saveTodoItem;
+        public ICommand SaveTodoItemCommand
+        {
+            get
+            {
+                return saveTodoItem ??
+                new Command(async () =>
+                {
+                    IsBusy = true;
+                    //await PopupNavigation.Instance.PushAsync(new CreateListView(this));
+                    IsBusy = false;
+                });
+            }
+        }
+
+        private ICommand deleteTodoItem;
+        public ICommand DeleteTodoItem
+        {
+            get
+            {
+                return deleteTodoItem ??
+                new Command(async (item) =>
+                {
+                    IsBusy = true;
+                    ActiveTodoList.TodoItems.Remove((TodoItemModel)item);
+                    await cachingService.SaveList(ActiveTodoList);
+                    IsBusy = false;
+                });
+            }
+        }
+
+        private ICommand completeList;
+        public ICommand CompleteListCommand
+        {
+            get
+            {
+                return completeList ??
+                new Command(async () =>
+                {
+                    IsBusy = true;
+                    await cachingService.CompleteList(ActiveTodoList);
+                    await navigationService.GoBackAsync();
+                    IsBusy = false;
+                });
+            }
+        }
 
         #endregion
 

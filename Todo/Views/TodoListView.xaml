@@ -46,7 +46,7 @@
                         <!--  SwipeItems  -->
                         <SwipeView IsEnabled="{Binding Completed, Converter={StaticResource InverseBoolean}}">
                             <SwipeView.LeftItems>
-                                <SwipeItems Mode="Reveal">
+                                <SwipeItems Mode="Execute">
 
                                     <SwipeItem
                                         BackgroundColor="Red"
