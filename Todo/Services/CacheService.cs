@@ -36,7 +36,24 @@ namespace Todo.Services
         {
             try
             {
-                return await database.QueryAsync<TodoListModel>("SELECT * FROM TodoList");
+                var lists = await database.QueryAsync<TodoListModel>("SELECT * FROM TodoList");
+
+                foreach(TodoListModel list in lists)
+                {
+                    var todoItems = await GetTodoItems(list.Id);
+
+                    if(todoItems != null && todoItems.Count > 0)
+                    {
+                        list.TodoItems = new List<TodoItemModel>(todoItems);
+                    }
+                    else
+                    {
+                        list.TodoItems = new List<TodoItemModel>();
+                    }
+                   
+                }
+
+                return lists;
             }
             catch (Exception ex)
             {
@@ -50,7 +67,25 @@ namespace Todo.Services
             try
             {
                 var list = await database.QueryAsync<TodoListModel>("SELECT * FROM TodoList WHERE Id = ?", listId);
-                return list[0] ?? null;
+
+                if(list != null && list.Count > 0)
+                {
+                    var todoItems = await GetTodoItems(list[0].Id);
+
+                    if (todoItems != null && todoItems.Count > 0)
+                    {
+                        list[0].TodoItems = new List<TodoItemModel>(todoItems);
+                    }
+                    else
+                    {
+                        list[0].TodoItems = new List<TodoItemModel>();
+                    }
+                    var listTodoItems = await GetTodoItems(list[0].Id);
+
+                    return list[0];
+                }
+
+                return null;
             }
             catch (Exception ex)
             {
@@ -155,6 +190,20 @@ namespace Todo.Services
             }
         }
 
+        public async Task<List<TodoItemModel>> GetTodoItems(Guid todoListId)
+        {
+            try
+            {
+                var todoItems = await database.QueryAsync<TodoItemModel>($"SELECT * FROM TodoItem where ListId = ?", todoListId);
+                return todoItems ?? null;
+            }
+            catch (Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+                return null;
+            }
+        }
+
         public async Task<bool> DeleteList(TodoListModel list)
         {
 
@@ -188,15 +237,15 @@ namespace Todo.Services
 
                 if (list.Active)
                 {
-                    var allLists = await GetAllLists();
-                    foreach (TodoListModel todo in allLists)
+                    var allLists = await database.QueryAsync<TodoListModel>("SELECT * FROM TodoList");
+                    foreach (TodoListModel todolist in allLists)
                     {
-                        todo.Active = false;
-                        await SaveList(todo);
+                        todolist.Active = false;
+                        await database.UpdateAsync(todolist);
                     }
                 }
 
-                await SaveList(list);
+                await database.UpdateAsync(list);
 
                 return true;
 

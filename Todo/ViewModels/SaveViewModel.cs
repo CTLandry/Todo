@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Rg.Plugins.Popup.Pages;
@@ -10,27 +11,28 @@ using Xamarin.Forms;
 
 namespace Todo.ViewModels
 {
-    public class CreateListViewModel : _BaseViewModel
+    public class SaveViewModel : _BaseViewModel
     {
 
         #region Member Variables
 
-        private TodoListViewModel parentViewModel;
-
+        private readonly TodoViewModel parentViewModel;
+       
         #endregion
 
         #region Properties
 
         private TodoListModel todoList;
-       
+        private Guid todoItemEditId;
+        
 
-        private string listName = string.Empty;
-        public string ListName
+        private string name = string.Empty;
+        public string Name
         {
-            get { return listName; }
+            get { return name; }
             set
             {
-                SetProperty(ref listName, value);
+                SetProperty(ref name, value);
                 IsCreateEnabled = !string.IsNullOrWhiteSpace(value);
             }
         }
@@ -47,6 +49,13 @@ namespace Todo.ViewModels
         {
             get { return isEdit; }
             set { SetProperty(ref isEdit, value); }
+        }
+
+        private bool isTodoItemSave = false;
+        public bool IsTodoItemSave
+        {
+            get { return isTodoItemSave; }
+            set { SetProperty(ref isTodoItemSave, value); }
         }
 
         #endregion
@@ -71,19 +80,37 @@ namespace Todo.ViewModels
         #endregion
 
      
-        public CreateListViewModel(TodoListViewModel parentVM)
+        public SaveViewModel(TodoListViewModel parentVM)
         {
             parentViewModel = parentVM;
-           
+            IsEdit = false;
         }
 
-        public CreateListViewModel(TodoListViewModel parentVM, TodoListModel todoList)
+        public SaveViewModel(TodoListViewModel parentVM, TodoListModel todoList)
         {
             parentViewModel = parentVM;
             this.todoList = todoList;
-            ListName = todoList.Name;
+            Name = todoList.Name;
             IsEdit = true;
+        }
 
+        public SaveViewModel(TodoItemViewModel parentVM, TodoListModel todoList)
+        {
+            parentViewModel = parentVM;
+            this.todoList = todoList;
+            IsTodoItemSave = true;
+            IsEdit = false;
+
+        }
+
+        public SaveViewModel(TodoItemViewModel parentVM, TodoListModel todoList, Guid todoItemId)
+        {
+            parentViewModel = parentVM;
+            this.todoList = todoList;
+            this.todoItemEditId = todoItemId;
+            Name = todoList.TodoItems.Where(item => item.Id == todoItemEditId).FirstOrDefault().Name;
+            IsEdit = true;
+            IsTodoItemSave = true;
         }
 
         #region Private Methods
@@ -96,14 +123,27 @@ namespace Todo.ViewModels
                 {
                     case "save":
                         {
-                            if(IsEdit)
+                            if(IsEdit && IsTodoItemSave)
                             {
-                                todoList.Name = ListName;
+                                todoList.TodoItems.Where(item => item.Id == todoItemEditId).FirstOrDefault().Name = Name;
                                 await parentViewModel.cachingService.SaveList(todoList);
+                               
+                            }
+                            else if(IsTodoItemSave)
+                            {
+                                todoList.TodoItems.Add(new TodoItemModel(Name));
+                                await parentViewModel.cachingService.SaveList(todoList);
+                                
+                            }
+                            else if(IsEdit)
+                            {
+                                todoList.Name = Name;
+                                await parentViewModel.cachingService.SaveList(todoList);
+                               
                             }
                             else
                             {
-                                await parentViewModel.cachingService.SaveList(new TodoListModel(ListName));
+                                await parentViewModel.cachingService.SaveList(new TodoListModel(Name));
                             }
 
                             await parentViewModel.RefreshTodoLists();

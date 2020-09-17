@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using SQLite;
 
@@ -22,9 +23,9 @@ namespace Todo.Models
             get { return name; }
         }
 
-        private ObservableCollection<TodoItemModel> todoItems;
+        private List<TodoItemModel> todoItems = new List<TodoItemModel>();
         [SQLite.Ignore]
-        public ObservableCollection<TodoItemModel> TodoItems
+        public List<TodoItemModel> TodoItems
         {
             set
             {
@@ -61,7 +62,7 @@ namespace Todo.Models
         {
             Id = Guid.NewGuid();
             Name = name;
-            TodoItems = new ObservableCollection<TodoItemModel>();
+           
         }
 
         #endregion

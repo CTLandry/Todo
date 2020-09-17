@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
 <controls:Popup
-    x:Class="Todo.Views.CreateListView"
+    x:Class="Todo.Views.SaveView"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:Todo.Controls">
@@ -28,14 +28,14 @@
                     Margin="24"
                     HorizontalOptions="StartAndExpand"
                     Style="{StaticResource PopupTitle}"
-                    Text="Name your todo list"
+                    Text="Name your item"
                     VerticalOptions="CenterAndExpand">
                     <Label.Triggers>
                         <DataTrigger
                             Binding="{Binding IsEdit}"
                             TargetType="Label"
                             Value="True">
-                            <Setter Property="Text" Value="Edit your to list name" />
+                            <Setter Property="Text" Value="Edit item name" />
                         </DataTrigger>
                     </Label.Triggers>
                 </Label>
@@ -53,14 +53,14 @@
                         Orientation="Horizontal"
                         VerticalOptions="FillAndExpand">
                         <Entry
-                            x:Name="entryListName"
+                            x:Name="entryName"
                             Margin="{OnPlatform Android='1',
                                                 iOS='0'}"
                             HeightRequest="46"
                             HorizontalOptions="FillAndExpand"
                             MaxLength="64"
                             Style="{StaticResource PopupEntry}"
-                            Text="{Binding ListName}" />
+                            Text="{Binding Name}" />
                     </StackLayout>
                 </Frame>
                 <Label
@@ -71,7 +71,7 @@
                     HeightRequest="16"
                     HorizontalOptions="Start"
                     Style="{StaticResource PopupDescription}"
-                    Text="Todo list name"
+                    Text="Name"
                     VerticalOptions="Start" />
 
                 <Grid

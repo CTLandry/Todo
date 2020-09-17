@@ -113,6 +113,14 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon20.png">
       <Visible>false</Visible>
     </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\checked.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\unchecked.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\checked.imageset\fill.png" />
+    <ImageAsset Include="Assets.xcassets\checked.imageset\fill%402x.png" />
+    <ImageAsset Include="Assets.xcassets\checked.imageset\fill%403x.png" />
+    <ImageAsset Include="Assets.xcassets\unchecked.imageset\circle.png" />
+    <ImageAsset Include="Assets.xcassets\unchecked.imageset\circle%402x.png" />
+    <ImageAsset Include="Assets.xcassets\unchecked.imageset\circle%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -141,5 +149,9 @@
       <Project>{9B4B1722-A945-4379-AA63-0957CB02B32E}</Project>
       <Name>Todo</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets.xcassets\checked.imageset\" />
+    <Folder Include="Assets.xcassets\unchecked.imageset\" />
   </ItemGroup>
 </Project>

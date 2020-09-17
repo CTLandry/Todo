@@ -3,12 +3,18 @@
     x:Class="Todo.Views.TodoItemView"
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:Todo.Controls"
     xmlns:converters="clr-namespace:Todo.Infrastructure.Converters"
     xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
     x:Name="TodoItemsPage"
     Title="Todo Items"
     prism:ViewModelLocator.AutowireViewModel="True">
-
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:ThresholdConverter x:Key="TodoItemThreshold" Threshold="1" />
+            <converters:InverseBoolConverter x:Key="InverseBoolean" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <!--  PageContainer  -->
     <Grid
         x:Name="ContainerGrid"
@@ -23,7 +29,7 @@
         <Grid
             x:Name="TodoItemListGrid"
             Grid.Row="0"
-            Margin="0,20,0,40"
+            Margin="0,20,0,20"
             HorizontalOptions="FillAndExpand"
             VerticalOptions="FillAndExpand">
             <Grid.RowDefinitions>
@@ -31,15 +37,16 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <CollectionView
-                x:Name="todoListCollectionView"
+                x:Name="todoItemsCollectionView"
+                Grid.Row="0"
                 BackgroundColor="Transparent"
-                ItemsSource="{Binding TodoLists}"
+                ItemsSource="{Binding TodoList.TodoItems}"
                 SelectionMode="None">
                 <!--  CollectionViewItemsDefinition  -->
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <!--  SwipeItems  -->
-                        <SwipeView IsEnabled="{Binding Completed, Converter={StaticResource InverseBoolean}}">
+                        <!--  SwipeItmes  -->
+                        <SwipeView>
                             <SwipeView.LeftItems>
                                 <SwipeItems Mode="Execute">
 
@@ -52,76 +59,85 @@
                                 </SwipeItems>
                             </SwipeView.LeftItems>
 
+                            <SwipeView.RightItems>
+                                <SwipeItems Mode="Reveal">
+
+                                    <SwipeItem
+                                        BackgroundColor="Gray"
+                                        Command="{Binding Path=BindingContext.EditTodoItemCommand, Source={x:Reference Name=TodoItemsPage}}"
+                                        CommandParameter="{Binding .}"
+                                        Text="Edit" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
                             <!--  RowDefinitions  -->
                             <Grid
-                                Margin="0,30,0,0"
-                                Padding="40,30,40,0"
+                                Margin="10,10,0,0"
+                                Padding="10"
                                 BackgroundColor="Transparent">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <controls:CheckBox
+                                    x:Name="todoCheckBox"
+                                    Margin="0,0,25,0"
+                                    CheckedImage="checked"
+                                    HorizontalOptions="CenterAndExpand"
+                                    IsChecked="{Binding Checked}"
+                                    IsEnabled="False"
+                                    UnCheckedImage="unchecked"
+                                    VerticalOptions="CenterAndExpand" />
 
                                 <Label
                                     Grid.Row="0"
+                                    Grid.Column="1"
                                     Style="{StaticResource TextHeader1}"
                                     Text="{Binding Name}"
                                     VerticalOptions="Center" />
-                                <Label
-                                    Grid.Row="0"
-                                    HorizontalOptions="End"
-                                    IsVisible="{Binding Active}"
-                                    Style="{StaticResource TextHeader1}"
-                                    Text="Active"
-                                    TextColor="Green"
-                                    VerticalOptions="Center" />
 
-                                <Label
-                                    Grid.Row="0"
-                                    HorizontalOptions="End"
-                                    IsVisible="{Binding Completed}"
-                                    Style="{StaticResource TextHeader1}"
-                                    Text="Complete"
-                                    TextColor="Green"
-                                    VerticalOptions="Center" />
-
-                                <Grid.Triggers>
-                                    <MultiTrigger TargetType="Grid">
-                                        <MultiTrigger.Conditions>
-                                            <BindingCondition Binding="{Binding Completed}" Value="True" />
-                                        </MultiTrigger.Conditions>
-                                        <Setter Property="IsEnabled" Value="False" />
-                                        <Setter Property="Opacity" Value=".5" />
-                                    </MultiTrigger>
-                                    <MultiTrigger TargetType="Grid">
-                                        <MultiTrigger.Conditions>
-                                            <BindingCondition Binding="{Binding Active}" Value="False" />
-                                        </MultiTrigger.Conditions>
-                                        <Setter Property="IsEnabled" Value="False" />
-                                        <Setter Property="Opacity" Value=".5" />
-                                    </MultiTrigger>
-                                </Grid.Triggers>
                                 <Grid.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding Source={x:Reference TodoListPage}, Mode=OneWay, Path=BindingContext.NavigateToTodoItemsCommand}" CommandParameter="{Binding .}" />
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.TodoCheckedCommand}"
+                                        CommandParameter="{Binding}"
+                                        NumberOfTapsRequired="1" />
                                 </Grid.GestureRecognizers>
                             </Grid>
                         </SwipeView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-            <Button
+            <StackLayout
                 Grid.Row="1"
-                Padding="10"
-                Command="{Binding ShowCreateTodoListCommand}"
                 HorizontalOptions="CenterAndExpand"
-                Style="{StaticResource DefaultButton}"
-                Text="Add Todo List"
-                VerticalOptions="EndAndExpand" />
+                Orientation="Horizontal"
+                Spacing="20"
+                VerticalOptions="EndAndExpand">
+                <Button
+                    Padding="10"
+                    Command="{Binding CompleteListCommand}"
+                    Style="{StaticResource DefaultButton}"
+                    Text="Complete List"
+                    VerticalOptions="EndAndExpand" />
+
+                <Button
+                    Padding="10"
+                    Command="{Binding SaveTodoItemCommand}"
+                    Style="{StaticResource DefaultButton}"
+                    Text="Add Todo Item"
+                    VerticalOptions="EndAndExpand" />
+
+            </StackLayout>
             <Grid.Triggers>
                 <MultiTrigger TargetType="Grid">
                     <MultiTrigger.Conditions>
-                        <BindingCondition Binding="{Binding Source={x:Reference todoListCollectionView}, Path=ItemsSource.Count, Converter={StaticResource ListItemThreshold}}" Value="True" />
+                        <BindingCondition Binding="{Binding Source={x:Reference todoItemsCollectionView}, Path=ItemsSource.Count, Converter={StaticResource TodoItemThreshold}}" Value="False" />
                     </MultiTrigger.Conditions>
-                    <Setter Property="IsVisible" Value="True" />
+                    <Setter Property="IsVisible" Value="False" />
                 </MultiTrigger>
             </Grid.Triggers>
         </Grid>
@@ -132,6 +148,7 @@
             Grid.Row="0"
             Margin="20,100,20,40"
             HorizontalOptions="FillAndExpand"
+            IsVisible="False"
             VerticalOptions="FillAndExpand">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -172,15 +189,14 @@
 
             </StackLayout>
 
-            <!--<Grid.Triggers>
+            <Grid.Triggers>
                 <MultiTrigger TargetType="Grid">
                     <MultiTrigger.Conditions>
-                        <BindingCondition Binding="{Binding Source={x:Reference todoListCollectionView}, Path=ItemsSource.Count, Converter={StaticResource ListItemThreshold}}" Value="True" />
+                        <BindingCondition Binding="{Binding IsEmpty}" Value="True" />
                     </MultiTrigger.Conditions>
-                    <Setter Property="IsVisible" Value="False" />
+                    <Setter Property="IsVisible" Value="True" />
                 </MultiTrigger>
-
-            </Grid.Triggers>-->
+            </Grid.Triggers>
         </Grid>
 
     </Grid>

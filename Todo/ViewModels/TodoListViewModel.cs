@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Prism.Navigation;
@@ -15,28 +11,10 @@ using Xamarin.Forms;
 
 namespace Todo.ViewModels
 {
-    public class TodoListViewModel : _BaseViewModel, INavigationAware
+    public class TodoListViewModel : TodoViewModel, INavigationAware
     {
         
-
-        #region Properties
-
-        private List<TodoListModel> todoLists;
-        public List<TodoListModel> TodoLists
-        {
-            set { SetProperty(ref todoLists, value); }
-            get { return todoLists; }
-        }
-
-        #endregion
-
-        #region Services
-
-        public readonly ICacheService cachingService;
-        public readonly INavigationService navigationService;
-
-        #endregion
-
+       
         #region Commands
 
         private ICommand showCreateTodoList;
@@ -48,7 +26,7 @@ namespace Todo.ViewModels
                 new Command(async (list) =>
                 {
                     IsBusy = true;
-                    await PopupNavigation.Instance.PushAsync(new CreateListView(this));
+                    await PopupNavigation.Instance.PushAsync(new SaveView(this));
                     IsBusy = false;
                 });
             }
@@ -63,7 +41,7 @@ namespace Todo.ViewModels
                 new Command(async (list) =>
                 {
                     IsBusy = true;
-                    await PopupNavigation.Instance.PushAsync(new CreateListView(this, (TodoListModel)list));
+                    await PopupNavigation.Instance.PushAsync(new SaveView(this, (TodoListModel)list));
                     IsBusy = false;
                 });
             }
@@ -102,6 +80,7 @@ namespace Todo.ViewModels
         }
 
         private ICommand navigateToTodoItems;
+
         public ICommand NavigateToTodoItemsCommand
         {
             get
@@ -127,18 +106,9 @@ namespace Todo.ViewModels
         #region Constructors
 
         public TodoListViewModel(ICacheService cacheService, INavigationService navigationService)
+            : base(cacheService, navigationService)
         {
-            
-            try
-            {
-                this.cachingService = cacheService;
-                this.navigationService = navigationService;
-                Task.Run(async () => await RefreshTodoLists());
-            }
-            catch (Exception ex)
-            {
-                ErrorTracker.ReportError(ex);
-            }
+            Task.Run(async () => await RefreshTodoLists());
         }
 
         #endregion
@@ -164,27 +134,7 @@ namespace Todo.ViewModels
 
         #endregion
 
-        #region PublicMethods
-
-        public async Task RefreshTodoLists()
-        {
-            try
-            {
-                TodoLists = await cachingService.GetAllLists();
-            }
-            catch (Exception ex)
-            {
-                ErrorTracker.ReportError(ex);
-            }
-        }
-
-        #endregion
-
-        #region PrivateMethods
-
-
-
-        #endregion
+      
 
     }
 }

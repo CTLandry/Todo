@@ -37,6 +37,7 @@
             </Grid.RowDefinitions>
             <CollectionView
                 x:Name="todoListCollectionView"
+                Grid.Row="0"
                 BackgroundColor="Transparent"
                 ItemsSource="{Binding TodoLists}"
                 SelectionMode="None">
