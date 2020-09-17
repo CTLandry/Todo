@@ -57,6 +57,11 @@
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource BackgroundColor_Dark}, Light={StaticResource BackgroundColor_Light}}" />
     </Style>
 
+    <!--  SwipeViewStyle  -->
+    <Style ApplyToDerivedTypes="True" TargetType="SwipeView">
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource BackgroundColor_Dark}, Light={StaticResource BackgroundColor_Light}}" />
+    </Style>
+
     <!--  Label Styles  -->
     <Style x:Key="TextHeader" TargetType="Label">
         <Setter Property="TextColor" Value="{AppThemeBinding Dark={StaticResource TextColor_Dark}, Light={StaticResource TextColor_Light}}" />

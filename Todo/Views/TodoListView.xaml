@@ -28,7 +28,7 @@
         <Grid
             x:Name="TodoListGrid"
             Grid.Row="0"
-            Margin="20,20,20,40"
+            Margin="0,20,0,40"
             HorizontalOptions="FillAndExpand"
             VerticalOptions="FillAndExpand">
             <Grid.RowDefinitions>
@@ -37,6 +37,7 @@
             </Grid.RowDefinitions>
             <CollectionView
                 x:Name="todoListCollectionView"
+                Grid.Row="0"
                 BackgroundColor="Transparent"
                 ItemsSource="{Binding TodoLists}"
                 SelectionMode="None">
@@ -44,18 +45,20 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <!--  SwipeItems  -->
-                        <SwipeView BackgroundColor="Transparent">
+                        <SwipeView IsEnabled="{Binding Completed, Converter={StaticResource InverseBoolean}}">
                             <SwipeView.LeftItems>
-                                <SwipeItems>
+                                <SwipeItems Mode="Execute">
+
                                     <SwipeItem
                                         BackgroundColor="Red"
                                         Command="{Binding Path=BindingContext.DeleteTodoList, Source={x:Reference Name=TodoListPage}}"
                                         CommandParameter="{Binding .}"
                                         Text="Delete" />
+
                                 </SwipeItems>
                             </SwipeView.LeftItems>
                             <SwipeView.RightItems>
-                                <SwipeItems>
+                                <SwipeItems Mode="Reveal">
                                     <SwipeItem
                                         BackgroundColor="Green"
                                         Command="{Binding Path=BindingContext.ChangeActiveStateCommand, Source={x:Reference Name=TodoListPage}}"
@@ -70,20 +73,21 @@
                                 </SwipeItems>
                             </SwipeView.RightItems>
                             <!--  RowDefinitions  -->
-                            <Grid Padding="10" BackgroundColor="Transparent">
+                            <Grid
+                                Margin="0,30,0,0"
+                                Padding="40,30,40,0"
+                                BackgroundColor="Transparent">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
                                 <Label
                                     Grid.Row="0"
-                                    Margin="0,0,0,10"
                                     Style="{StaticResource TextHeader1}"
                                     Text="{Binding Name}"
                                     VerticalOptions="Center" />
                                 <Label
                                     Grid.Row="0"
-                                    Margin="0,0,0,10"
                                     HorizontalOptions="End"
                                     IsVisible="{Binding Active}"
                                     Style="{StaticResource TextHeader1}"
@@ -91,6 +95,34 @@
                                     TextColor="Green"
                                     VerticalOptions="Center" />
 
+                                <Label
+                                    Grid.Row="0"
+                                    HorizontalOptions="End"
+                                    IsVisible="{Binding Completed}"
+                                    Style="{StaticResource TextHeader1}"
+                                    Text="Complete"
+                                    TextColor="Green"
+                                    VerticalOptions="Center" />
+
+                                <Grid.Triggers>
+                                    <MultiTrigger TargetType="Grid">
+                                        <MultiTrigger.Conditions>
+                                            <BindingCondition Binding="{Binding Completed}" Value="True" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="IsEnabled" Value="False" />
+                                        <Setter Property="Opacity" Value=".5" />
+                                    </MultiTrigger>
+                                    <MultiTrigger TargetType="Grid">
+                                        <MultiTrigger.Conditions>
+                                            <BindingCondition Binding="{Binding Active}" Value="False" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="IsEnabled" Value="False" />
+                                        <Setter Property="Opacity" Value=".5" />
+                                    </MultiTrigger>
+                                </Grid.Triggers>
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference TodoListPage}, Mode=OneWay, Path=BindingContext.NavigateToTodoItemsCommand}" CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
                             </Grid>
                         </SwipeView>
                     </DataTemplate>

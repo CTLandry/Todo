@@ -33,7 +33,6 @@
     <Folder Include="Infrastructure\Exceptions\" />
     <Folder Include="Styles\" />
     <Folder Include="Infrastructure\Enumerations\" />
-    <Folder Include="ViewModels\CreateListViewModel\" />
     <Folder Include="Controls\" />
     <Folder Include="Infrastructure\Converters\" />
   </ItemGroup>
@@ -43,6 +42,9 @@
     </Compile>
     <Compile Update="Styles\DefaultTheme.xaml.cs">
       <DependentUpon>DefaultTheme.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\TodoItemView.xaml.cs">
+      <DependentUpon>TodoItemView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

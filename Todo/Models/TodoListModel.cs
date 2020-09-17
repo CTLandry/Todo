@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using SQLite;
 
@@ -13,6 +14,8 @@ namespace Todo.Models
         [PrimaryKey]
         public Guid Id { get; set; }
 
+        public bool TodoItemsEdited = false;
+
         private string name;
         public string Name
         {
@@ -20,11 +23,15 @@ namespace Todo.Models
             get { return name; }
         }
 
-        private ObservableCollection<TodoItemModel> todoItems;
+        private List<TodoItemModel> todoItems = new List<TodoItemModel>();
         [SQLite.Ignore]
-        public ObservableCollection<TodoItemModel> TodoItems
+        public List<TodoItemModel> TodoItems
         {
-            set { SetProperty(ref todoItems, value); }
+            set
+            {
+                SetProperty(ref todoItems, value);
+                TodoItemsEdited = true;
+            }
             get { return todoItems; }
         }
 
@@ -33,6 +40,13 @@ namespace Todo.Models
         {
             set { SetProperty(ref active, value); }
             get { return active; }
+        }
+
+        private bool completed;
+        public bool Completed
+        {
+            set { SetProperty(ref completed, value); }
+            get { return completed; }
         }
 
         #endregion
@@ -48,7 +62,7 @@ namespace Todo.Models
         {
             Id = Guid.NewGuid();
             Name = name;
-            TodoItems = new ObservableCollection<TodoItemModel>();
+           
         }
 
         #endregion

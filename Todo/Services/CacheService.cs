@@ -11,7 +11,7 @@ namespace Todo.Services
 
     public class CacheService : ICacheService
     {
-       
+
         private readonly SQLiteAsyncConnection database;
 
         public CacheService()
@@ -36,7 +36,24 @@ namespace Todo.Services
         {
             try
             {
-                return await database.QueryAsync<TodoListModel>("SELECT * FROM TodoList ORDER BY Active desc");
+                var lists = await database.QueryAsync<TodoListModel>("SELECT * FROM TodoList");
+
+                foreach(TodoListModel list in lists)
+                {
+                    var todoItems = await GetTodoItems(list.Id);
+
+                    if(todoItems != null && todoItems.Count > 0)
+                    {
+                        list.TodoItems = new List<TodoItemModel>(todoItems);
+                    }
+                    else
+                    {
+                        list.TodoItems = new List<TodoItemModel>();
+                    }
+                   
+                }
+
+                return lists;
             }
             catch (Exception ex)
             {
@@ -50,7 +67,25 @@ namespace Todo.Services
             try
             {
                 var list = await database.QueryAsync<TodoListModel>("SELECT * FROM TodoList WHERE Id = ?", listId);
-                return list[0] ?? null;
+
+                if(list != null && list.Count > 0)
+                {
+                    var todoItems = await GetTodoItems(list[0].Id);
+
+                    if (todoItems != null && todoItems.Count > 0)
+                    {
+                        list[0].TodoItems = new List<TodoItemModel>(todoItems);
+                    }
+                    else
+                    {
+                        list[0].TodoItems = new List<TodoItemModel>();
+                    }
+                    var listTodoItems = await GetTodoItems(list[0].Id);
+
+                    return list[0];
+                }
+
+                return null;
             }
             catch (Exception ex)
             {
@@ -65,20 +100,32 @@ namespace Todo.Services
             {
                 var existingList = await GetList(list.Id);
 
-                if(existingList != null)
+                if (existingList != null)
                 {
-                    await database.UpdateAsync(list);
                     
+                    if (list.TodoItemsEdited)
+                    {
+                        list.TodoItemsEdited = false;
+                       
+                        foreach (TodoItemModel item in list.TodoItems)
+                        {
+                            await DeleteTodoItem(item);
+                        }
+
+                        foreach (TodoItemModel item in list.TodoItems)
+                        {
+                            await SaveTodoItem(item, list.Id);
+                        }
+                    }
+
+                    await database.UpdateAsync(list);
+
+
                 }
                 else
                 {
                     await database.InsertAsync(list);
-                }
-
-
-                foreach(TodoItemModel item in list.TodoItems)
-                {
-                    await SaveTodoItem(item, list.Id);
+                    await ChangeListActiveState(list);
                 }
 
                 return true;
@@ -143,17 +190,31 @@ namespace Todo.Services
             }
         }
 
-        public async Task<bool> DeleteList(TodoListModel list)
+        public async Task<List<TodoItemModel>> GetTodoItems(Guid todoListId)
         {
-           
             try
             {
-                if(list.TodoItems != null)
+                var todoItems = await database.QueryAsync<TodoItemModel>($"SELECT * FROM TodoItem where ListId = ?", todoListId);
+                return todoItems ?? null;
+            }
+            catch (Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+                return null;
+            }
+        }
+
+        public async Task<bool> DeleteList(TodoListModel list)
+        {
+
+            try
+            {
+                if (list.TodoItems != null)
                 {
                     foreach (TodoItemModel todoItem in list.TodoItems)
                     {
                         await database.DeleteAsync(todoItem);
-                    } 
+                    }
                 }
 
                 await database.DeleteAsync(list);
@@ -171,31 +232,48 @@ namespace Todo.Services
         {
             try
             {
-                if(list != null)
+
+                list.Active = !list.Active;
+
+                if (list.Active)
                 {
-                    list.Active = !list.Active;
-
-                    if(list.Active)
+                    var allLists = await database.QueryAsync<TodoListModel>("SELECT * FROM TodoList");
+                    foreach (TodoListModel todolist in allLists)
                     {
-                        var allLists = await GetAllLists();
-                        foreach(TodoListModel todo in allLists)
-                        {
-                            todo.Active = false;
-                            await SaveList(todo);
-                        }
+                        todolist.Active = false;
+                        await database.UpdateAsync(todolist);
                     }
-
-                    await SaveList(list);
-
-                    return true;
                 }
-                return false;
+
+                await database.UpdateAsync(list);
+
+                return true;
+
+
             }
             catch (Exception ex)
             {
                 ErrorTracker.ReportError(ex);
                 return false;
             }
+        }
+
+        public async Task<bool> CompleteList(TodoListModel list)
+        {
+            try
+            {
+                list.Active = false;
+                list.Completed = true;
+                await SaveList(list);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                ErrorTracker.ReportError(ex);
+                return false;
+            }
+            
         }
     }
 }
