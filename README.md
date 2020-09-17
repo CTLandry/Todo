@@ -1,29 +1,30 @@
 # Todo Project
 
-**Architecture
+## Architecture
 
-MVVM
-SQLite Cache
+* MVVM
+* SQLite Cache
 
-**Scope of Capability
+## Scope of Capability
 
-1. Add Todo List
-  a. Swipe Left Activate/Edit
-  b. Swipe Right Delete
-  c. Set Complete State from Todo Items
-  D. Tap To Enter TodoItems For TodoList
+* Add Todo List
+   * Swipe Left Activate/Edit
+   * Swipe Right Delete
+   * Set Complete State from Todo Items
+   * Tap To Enter TodoItems For TodoList
   
-2. Add Todo Items
-  a. Swipe Left Edit
-  b. Swipe Right Delete
-  c. Tap To Check Item Off
+* Add Todo Items
+   * Swipe Left Edit
+   * Swipe Right Delete
+   * Tap To Check Item Off
   
-3. Style
-  a. Light Mode
-  b. Dark Mode
-  c. Universal Element Targeting 
-  d. Derived Type Targeting
+* Style
+   * Light Mode
+   * Dark Mode
+   * Universal Element Targeting 
+   * Derived Type Targeting
   
-  **Infrastructure
+## Infrastructure
   
-  App Center
+  * App Center
+  * Several 3rd Party Nugets
